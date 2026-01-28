@@ -1051,7 +1051,7 @@ export default function KanjiFlashcardApp() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            日本語総まとめ N2
+            Japanese Somatome N2
           </h1>
           <h2 className="text-xl md:text-2xl text-purple-300 font-light">
             Kanji Flash Cards • မြန်မာဘာသာပြန်
@@ -1250,6 +1250,8 @@ export default function KanjiFlashcardApp() {
         <div className="text-center mt-8 text-purple-300/40 text-sm">
           <p>N2 日本語総まとめ 漢字 Flash Card App</p>
           <p>Data source: Hla Hla Htay's Notes</p>
+          <p>Special thanks for the valuable learning materials.</p>
+
         </div>
       </div>
 
