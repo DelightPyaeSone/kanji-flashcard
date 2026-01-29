@@ -1,4 +1,7 @@
-// Kanji Card Types
+// ========== App Mode Types ==========
+export type AppMode = 'home' | 'kanji' | 'vocab';
+
+// ========== Kanji Card Types ==========
 export interface KanjiCard {
   kanji: string;
   reading: string;
@@ -19,7 +22,31 @@ export interface KanjiData {
   [week: string]: WeekData;
 }
 
-// Study Types
+// ========== Vocabulary Types ==========
+export interface VocabCard {
+  word: string;           // 単語 (kanji or kana)
+  reading: string;        // ふりがな
+  meaning: string;        // English meaning
+  myanmar: string;        // Myanmar meaning
+  example?: string;       // 例文
+  exampleMeaning?: string; // 例文の意味
+}
+
+export interface SectionData {
+  title: string;
+  videoUrl?: string;      // Facebook video reference
+  cards: VocabCard[];
+}
+
+export interface ChapterData {
+  [section: string]: SectionData;
+}
+
+export interface VocabData {
+  [chapter: string]: ChapterData;
+}
+
+// ========== Study Types ==========
 export type StudyMode = 'browse' | 'quiz' | 'srs';
 
 export interface Score {
@@ -27,7 +54,7 @@ export interface Score {
   total: number;
 }
 
-// SRS Types
+// ========== SRS Types ==========
 export type SRSGrade = 0 | 1 | 2 | 3 | 4 | 5;
 
 export interface SRSCardData {
@@ -39,15 +66,15 @@ export interface SRSCardData {
   lastReviewDate: string;
 }
 
-// Theme Types
+// ========== Theme Types ==========
 export type Theme = 'dark' | 'light' | 'sakura';
 
-// Statistics Types
+// ========== Statistics Types ==========
 export interface StudySession {
   date: string;
   cardsStudied: number;
   correctAnswers: number;
-  duration: number; // in minutes
+  duration: number;
   mode: StudyMode;
 }
 
@@ -57,7 +84,7 @@ export interface StreakInfo {
   lastStudyDate: string;
 }
 
-// Settings Types
+// ========== Settings Types ==========
 export interface Settings {
   theme: Theme;
   showMyanmarFirst: boolean;
@@ -66,7 +93,7 @@ export interface Settings {
   keyboardShortcutsEnabled: boolean;
 }
 
-// Progress Types
+// ========== Progress Types ==========
 export interface Progress {
   knownCards: string[];
   bookmarkedCards: string[];

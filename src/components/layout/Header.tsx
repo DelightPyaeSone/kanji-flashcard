@@ -11,6 +11,7 @@ interface HeaderProps {
   onOpenStats?: () => void;
   onOpenSearch?: () => void;
   onOpenSettings?: () => void;
+  title?: string;
 }
 
 const themes: { theme: Theme; icon: typeof Sun; label: string }[] = [
@@ -26,6 +27,7 @@ export function Header({
   onOpenStats,
   onOpenSearch,
   onOpenSettings,
+  title,
 }: HeaderProps) {
   const config = themeConfig[theme];
   const isSakura = theme === 'sakura';
@@ -44,7 +46,7 @@ export function Header({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Japanese Somatome N2
+        {title ? `N2 ${title}` : 'N2 Master'}
       </motion.h1>
 
       <motion.h2
@@ -53,7 +55,12 @@ export function Header({
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        Kanji Flash Cards • မြန်မာဘာသာပြန်
+        {title === '漢字'
+          ? 'Kanji Flash Cards • မြန်မာဘာသာပြန်'
+          : title === '単語'
+            ? 'Vocabulary Flash Cards • မြန်မာဘာသာပြန်'
+            : 'JLPT N2 Study App • မြန်မာဘာသာပြန်'
+        }
       </motion.h2>
 
       {/* Toolbar */}

@@ -8,14 +8,24 @@ import type {
   StudySession,
   StreakInfo,
   Settings,
+  AppMode,
 } from '@/types';
 import { createInitialSRSData, calculateNextReview, getDueCards } from '@/services/srs';
 import { generateCardId } from '@/data';
 
 interface StudyState {
-  // Navigation
+  // App Mode
+  appMode: AppMode;
+
+  // Navigation - Kanji
   selectedWeek: string;
   selectedDay: string;
+
+  // Navigation - Vocab
+  selectedChapter: string;
+  selectedSection: string;
+
+  // Common
   currentCardIndex: number;
 
   // Card State
@@ -43,9 +53,14 @@ interface StudyState {
   // Settings
   settings: Settings;
 
+  // Actions - App Mode
+  setAppMode: (mode: AppMode) => void;
+
   // Actions - Navigation
   setSelectedWeek: (week: string) => void;
   setSelectedDay: (day: string) => void;
+  setSelectedChapter: (chapter: string) => void;
+  setSelectedSection: (section: string) => void;
   setCurrentCardIndex: (index: number) => void;
   nextCard: (totalCards: number) => void;
   prevCard: (totalCards: number) => void;
@@ -64,6 +79,7 @@ interface StudyState {
   markAsUnknown: (cardId: string) => void;
   toggleBookmark: (cardId: string) => void;
   resetDayProgress: () => void;
+  resetSectionProgress: () => void;
   resetAllProgress: () => void;
 
   // Actions - SRS
@@ -89,9 +105,18 @@ const getToday = () => new Date().toISOString().split('T')[0];
 export const useStore = create<StudyState>()(
   persist(
     (set, get) => ({
-      // Initial State - Navigation
+      // Initial State - App Mode
+      appMode: 'home',
+
+      // Initial State - Navigation Kanji
       selectedWeek: 'Week 1',
       selectedDay: 'Day 1',
+
+      // Initial State - Navigation Vocab
+      selectedChapter: 'Chapter 1',
+      selectedSection: 'Section 1',
+
+      // Initial State - Common
       currentCardIndex: 0,
 
       // Initial State - Card
@@ -129,6 +154,15 @@ export const useStore = create<StudyState>()(
         keyboardShortcutsEnabled: true,
       },
 
+      // Actions - App Mode
+      setAppMode: (mode) =>
+        set({
+          appMode: mode,
+          currentCardIndex: 0,
+          isFlipped: false,
+          showReading: false,
+        }),
+
       // Actions - Navigation
       setSelectedWeek: (week) =>
         set({
@@ -141,6 +175,23 @@ export const useStore = create<StudyState>()(
       setSelectedDay: (day) =>
         set({
           selectedDay: day,
+          currentCardIndex: 0,
+          isFlipped: false,
+          showReading: false,
+        }),
+
+      setSelectedChapter: (chapter) =>
+        set({
+          selectedChapter: chapter,
+          selectedSection: 'Section 1',
+          currentCardIndex: 0,
+          isFlipped: false,
+          showReading: false,
+        }),
+
+      setSelectedSection: (section) =>
+        set({
+          selectedSection: section,
           currentCardIndex: 0,
           isFlipped: false,
           showReading: false,
@@ -180,8 +231,10 @@ export const useStore = create<StudyState>()(
       // Actions - Progress
       markAsKnown: (cardId) =>
         set((state) => {
-          const { selectedWeek, selectedDay } = state;
-          const scoreKey = `${selectedWeek}-${selectedDay}`;
+          const { appMode, selectedWeek, selectedDay, selectedChapter, selectedSection } = state;
+          const scoreKey = appMode === 'kanji'
+            ? `${selectedWeek}-${selectedDay}`
+            : `${selectedChapter}-${selectedSection}`;
           const currentScore = state.scores[scoreKey] || { correct: 0, total: 0 };
 
           return {
@@ -200,8 +253,10 @@ export const useStore = create<StudyState>()(
 
       markAsUnknown: (cardId) =>
         set((state) => {
-          const { selectedWeek, selectedDay } = state;
-          const scoreKey = `${selectedWeek}-${selectedDay}`;
+          const { appMode, selectedWeek, selectedDay, selectedChapter, selectedSection } = state;
+          const scoreKey = appMode === 'kanji'
+            ? `${selectedWeek}-${selectedDay}`
+            : `${selectedChapter}-${selectedSection}`;
           const currentScore = state.scores[scoreKey] || { correct: 0, total: 0 };
 
           return {
@@ -228,6 +283,22 @@ export const useStore = create<StudyState>()(
           const { selectedWeek, selectedDay } = state;
           const scoreKey = `${selectedWeek}-${selectedDay}`;
           const prefix = generateCardId(selectedWeek, selectedDay, 0).slice(0, -1);
+
+          return {
+            knownCards: state.knownCards.filter((id) => !id.startsWith(prefix)),
+            scores: {
+              ...state.scores,
+              [scoreKey]: { correct: 0, total: 0 },
+            },
+            currentCardIndex: 0,
+          };
+        }),
+
+      resetSectionProgress: () =>
+        set((state) => {
+          const { selectedChapter, selectedSection } = state;
+          const scoreKey = `${selectedChapter}-${selectedSection}`;
+          const prefix = `vocab-${selectedChapter}-${selectedSection}`;
 
           return {
             knownCards: state.knownCards.filter((id) => !id.startsWith(prefix)),
@@ -299,7 +370,7 @@ export const useStore = create<StudyState>()(
           const session: StudySession = {
             date: new Date().toISOString(),
             cardsStudied: state.cardsStudiedThisSession,
-            correctAnswers: 0, // Can be calculated from scores
+            correctAnswers: 0,
             duration,
             mode: state.studyMode,
           };
@@ -373,10 +444,11 @@ export const useStore = create<StudyState>()(
         })),
     }),
     {
-      name: 'kanji-flashcard-storage',
+      name: 'n2-master-storage',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         // Persist these
+        appMode: state.appMode,
         knownCards: state.knownCards,
         bookmarkedCards: state.bookmarkedCards,
         scores: state.scores,
@@ -386,19 +458,24 @@ export const useStore = create<StudyState>()(
         settings: state.settings,
         selectedWeek: state.selectedWeek,
         selectedDay: state.selectedDay,
+        selectedChapter: state.selectedChapter,
+        selectedSection: state.selectedSection,
       }),
     }
   )
 );
 
 // Selectors
+export const useAppMode = () => useStore((state) => state.appMode);
 export const useSelectedWeek = () => useStore((state) => state.selectedWeek);
 export const useSelectedDay = () => useStore((state) => state.selectedDay);
+export const useSelectedChapter = () => useStore((state) => state.selectedChapter);
+export const useSelectedSection = () => useStore((state) => state.selectedSection);
 export const useCurrentCardIndex = () => useStore((state) => state.currentCardIndex);
 export const useIsFlipped = () => useStore((state) => state.isFlipped);
 export const useShowReading = () => useStore((state) => state.showReading);
 export const useStudyMode = () => useStore((state) => state.studyMode);
-export const useTheme = () => useStore((state) => state.settings.theme);
+export const useThemeStore = () => useStore((state) => state.settings.theme);
 export const useSettings = () => useStore((state) => state.settings);
 export const useKnownCards = () => useStore((state) => state.knownCards);
 export const useBookmarkedCards = () => useStore((state) => state.bookmarkedCards);
