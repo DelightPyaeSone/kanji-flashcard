@@ -1,0 +1,121 @@
+import type { WeekData } from '@/types';
+
+export const week3: WeekData = {
+  "Day 1": {
+    topic: "料金通知・払い込み用紙 - ငွေပေးချေရန်အကြောင်းကြားစာ",
+    cards: [
+      { kanji: "様子", reading: "ようす", meaning: "situation", myanmar: "အခြေအနေ" },
+      { kanji: "同様", reading: "どうよう", meaning: "same", myanmar: "တူညီသော" },
+      { kanji: "重要", reading: "じゅうよう", meaning: "important", myanmar: "အရေးကြီးသော" },
+      { kanji: "利用", reading: "りよう", meaning: "use", myanmar: "အသုံးပြုခြင်း" },
+      { kanji: "便利", reading: "べんり", meaning: "convenient", myanmar: "အဆင်ပြေသော" },
+      { kanji: "明細", reading: "めいさい", meaning: "details", myanmar: "အသေးစိတ်" },
+      { kanji: "細かい", reading: "こまかい", meaning: "fine/detailed", myanmar: "သေးငယ်သော" },
+      { kanji: "現在", reading: "げんざい", meaning: "present", myanmar: "လက်ရှိ" },
+      { kanji: "不在", reading: "ふざい", meaning: "absence", myanmar: "မရှိခြင်း" },
+      { kanji: "金額", reading: "きんがく", meaning: "amount", myanmar: "ပမာဏ" },
+      { kanji: "領収書", reading: "りょうしゅうしょ", meaning: "receipt", myanmar: "ပြေစာ" },
+      { kanji: "収入", reading: "しゅうにゅう", meaning: "income", myanmar: "ဝင်ငွေ" },
+      { kanji: "機械", reading: "きかい", meaning: "machine", myanmar: "စက်" },
+      { kanji: "汚染", reading: "おせん", meaning: "pollution", myanmar: "ညစ်ညမ်းမှု" },
+    ]
+  },
+  "Day 2": {
+    topic: "不在通知 - မရှိကြောင်းအကြောင်းကြားစာ",
+    cards: [
+      { kanji: "連絡", reading: "れんらく", meaning: "contact", myanmar: "ဆက်သွယ်ခြင်း" },
+      { kanji: "連続", reading: "れんぞく", meaning: "continuous", myanmar: "ဆက်တိုက်" },
+      { kanji: "連休", reading: "れんきゅう", meaning: "holidays", myanmar: "ဆက်တိုက်ရုံးပိတ်ရက်" },
+      { kanji: "届ける", reading: "とどける", meaning: "deliver", myanmar: "ပို့ဆောင်သည်" },
+      { kanji: "届く", reading: "とどく", meaning: "arrive", myanmar: "ရောက်သည်" },
+      { kanji: "参考", reading: "さんこう", meaning: "reference", myanmar: "ကိုးကား" },
+      { kanji: "衣類", reading: "いるい", meaning: "clothing", myanmar: "အဝတ်အစား" },
+      { kanji: "冷凍", reading: "れいとう", meaning: "frozen", myanmar: "အေးခဲသော" },
+      { kanji: "凍る", reading: "こおる", meaning: "freeze", myanmar: "အေးခဲသည်" },
+      { kanji: "配達", reading: "はいたつ", meaning: "delivery", myanmar: "ပို့ဆောင်ခြင်း" },
+      { kanji: "心配", reading: "しんぱい", meaning: "worry", myanmar: "စိုးရိမ်မှု" },
+      { kanji: "担当", reading: "たんとう", meaning: "in charge", myanmar: "တာဝန်ခံ" },
+      { kanji: "弁当", reading: "べんとう", meaning: "lunch box", myanmar: "ထမင်းဘူး" },
+    ]
+  },
+  "Day 3": {
+    topic: "ポイントカード・商品券 - ပွိုင့်ကတ်",
+    cards: [
+      { kanji: "商品", reading: "しょうひん", meaning: "goods", myanmar: "ကုန်ပစ္စည်း" },
+      { kanji: "商売", reading: "しょうばい", meaning: "business", myanmar: "အရောင်းအဝယ်" },
+      { kanji: "個人", reading: "こじん", meaning: "individual", myanmar: "တစ်ဦးချင်း" },
+      { kanji: "首相", reading: "しゅしょう", meaning: "prime minister", myanmar: "ဝန်ကြီးချုပ်" },
+      { kanji: "相手", reading: "あいて", meaning: "partner", myanmar: "လက်တွဲဖက်" },
+      { kanji: "交換", reading: "こうかん", meaning: "exchange", myanmar: "လဲလှယ်ခြင်း" },
+      { kanji: "交通", reading: "こうつう", meaning: "traffic", myanmar: "သယ်ယူပို့ဆောင်ရေး" },
+      { kanji: "有効", reading: "ゆうこう", meaning: "valid", myanmar: "တရားဝင်" },
+      { kanji: "効果", reading: "こうか", meaning: "effect", myanmar: "အကျိုးသက်ရောက်မှု" },
+      { kanji: "期限", reading: "きげん", meaning: "deadline", myanmar: "သတ်မှတ်ရက်" },
+      { kanji: "全国", reading: "ぜんこく", meaning: "nationwide", myanmar: "နိုင်ငံတစ်ဝှမ်း" },
+      { kanji: "完全", reading: "かんぜん", meaning: "perfect", myanmar: "ပြည့်စုံသော" },
+      { kanji: "経験", reading: "けいけん", meaning: "experience", myanmar: "အတွေ့အကြုံ" },
+      { kanji: "経済", reading: "けいざい", meaning: "economy", myanmar: "စီးပွားရေး" },
+      { kanji: "責任", reading: "せきにん", meaning: "responsibility", myanmar: "တာဝန်" },
+    ]
+  },
+  "Day 4": {
+    topic: "ゴミの分別 - အမှိုက်ခွဲခြားခြင်း",
+    cards: [
+      { kanji: "必要", reading: "ひつよう", meaning: "necessary", myanmar: "လိုအပ်သော" },
+      { kanji: "必ず", reading: "かならず", meaning: "certainly", myanmar: "သေချာပေါက်" },
+      { kanji: "袋", reading: "ふくろ", meaning: "bag", myanmar: "အိတ်" },
+      { kanji: "燃料", reading: "ねんりょう", meaning: "fuel", myanmar: "လောင်စာ" },
+      { kanji: "枝", reading: "えだ", meaning: "branch", myanmar: "အကိုင်း" },
+      { kanji: "葉", reading: "は", meaning: "leaf", myanmar: "အရွက်" },
+      { kanji: "落ち葉", reading: "おちば", meaning: "fallen leaves", myanmar: "ကြွေလွင့်အရွက်" },
+      { kanji: "埋める", reading: "うめる", meaning: "bury", myanmar: "မြှုပ်သည်" },
+      { kanji: "製品", reading: "せいひん", meaning: "product", myanmar: "ထုတ်ကုန်" },
+      { kanji: "内容", reading: "ないよう", meaning: "contents", myanmar: "အကြောင်းအရာ" },
+      { kanji: "容器", reading: "ようき", meaning: "container", myanmar: "ဘူး" },
+      { kanji: "食器", reading: "しょっき", meaning: "tableware", myanmar: "စားသောက်ကိရိယာ" },
+      { kanji: "雑誌", reading: "ざっし", meaning: "magazine", myanmar: "မဂ္ဂဇင်း" },
+      { kanji: "資源", reading: "しげん", meaning: "resources", myanmar: "သယံဇာတ" },
+      { kanji: "資料", reading: "しりょう", meaning: "materials", myanmar: "အချက်အလက်" },
+    ]
+  },
+  "Day 5": {
+    topic: "いろいろな通知 - အမျိုးမျိုးသောအကြောင်းကြားစာ",
+    cards: [
+      { kanji: "避難", reading: "ひなん", meaning: "evacuation", myanmar: "ရှောင်တိမ်းခြင်း" },
+      { kanji: "困難", reading: "こんなん", meaning: "difficult", myanmar: "ခက်ခဲသော" },
+      { kanji: "訓練", reading: "くんれん", meaning: "training", myanmar: "လေ့ကျင့်ခြင်း" },
+      { kanji: "練習", reading: "れんしゅう", meaning: "practice", myanmar: "လေ့ကျင့်ခြင်း" },
+      { kanji: "地震", reading: "じしん", meaning: "earthquake", myanmar: "ငလျင်" },
+      { kanji: "震える", reading: "ふるえる", meaning: "tremble", myanmar: "တုန်သည်" },
+      { kanji: "参加", reading: "さんか", meaning: "participate", myanmar: "ပါဝင်ခြင်း" },
+      { kanji: "加える", reading: "くわえる", meaning: "add", myanmar: "ထည့်သည်" },
+      { kanji: "延期", reading: "えんき", meaning: "postpone", myanmar: "ရွှေ့ဆိုင်းခြင်း" },
+      { kanji: "断水", reading: "だんすい", meaning: "water outage", myanmar: "ရေပြတ်ခြင်း" },
+      { kanji: "断る", reading: "ことわる", meaning: "refuse", myanmar: "ငြင်းသည်" },
+      { kanji: "管理", reading: "かんり", meaning: "management", myanmar: "စီမံခန့်ခွဲခြင်း" },
+      { kanji: "記入", reading: "きにゅう", meaning: "fill in", myanmar: "ဖြည့်သွင်းခြင်း" },
+      { kanji: "協力", reading: "きょうりょく", meaning: "cooperation", myanmar: "ပူးပေါင်းဆောင်ရွက်ခြင်း" },
+      { kanji: "平日", reading: "へいじつ", meaning: "weekday", myanmar: "ရုံးဖွင့်ရက်" },
+    ]
+  },
+  "Day 6": {
+    topic: "健診結果 - ကျန်းမာရေးစစ်ဆေးမှုရလဒ်",
+    cards: [
+      { kanji: "結果", reading: "けっか", meaning: "result", myanmar: "ရလဒ်" },
+      { kanji: "結局", reading: "けっきょく", meaning: "after all", myanmar: "နောက်ဆုံးတွင်" },
+      { kanji: "結ぶ", reading: "むすぶ", meaning: "tie", myanmar: "ချည်သည်" },
+      { kanji: "方法", reading: "ほうほう", meaning: "method", myanmar: "နည်းလမ်း" },
+      { kanji: "文法", reading: "ぶんぽう", meaning: "grammar", myanmar: "သဒ္ဒါ" },
+      { kanji: "地位", reading: "ちい", meaning: "status", myanmar: "အဆင့်အတန်း" },
+      { kanji: "異常", reading: "いじょう", meaning: "abnormal", myanmar: "ပုံမှန်မဟုတ်သော" },
+      { kanji: "異なる", reading: "ことなる", meaning: "differ", myanmar: "ကွဲပြားသည်" },
+      { kanji: "移転", reading: "いてん", meaning: "relocate", myanmar: "ပြောင်းရွှေ့ခြင်း" },
+      { kanji: "移動", reading: "いどう", meaning: "move", myanmar: "ရွှေ့ပြောင်းခြင်း" },
+      { kanji: "事務所", reading: "じむしょ", meaning: "office", myanmar: "ရုံး" },
+      { kanji: "変更", reading: "へんこう", meaning: "change", myanmar: "ပြောင်းလဲခြင်း" },
+      { kanji: "更新", reading: "こうしん", meaning: "renewal", myanmar: "သက်တမ်းတိုးခြင်း" },
+      { kanji: "笑顔", reading: "えがお", meaning: "smile", myanmar: "ပြုံးချိုမျက်နှာ" },
+      { kanji: "涙", reading: "なみだ", meaning: "tears", myanmar: "မျက်ရည်" },
+    ]
+  }
+};
