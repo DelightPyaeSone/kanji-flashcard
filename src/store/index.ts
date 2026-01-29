@@ -12,6 +12,7 @@ import type {
 } from '@/types';
 import { createInitialSRSData, calculateNextReview, getDueCards } from '@/services/srs';
 import { generateCardId } from '@/data';
+import { generateVocabCardId } from '@/data/vocab';
 
 interface StudyState {
   // App Mode
@@ -21,9 +22,9 @@ interface StudyState {
   selectedWeek: string;
   selectedDay: string;
 
-  // Navigation - Vocab
-  selectedChapter: string;
-  selectedSection: string;
+  // Navigation - Vocab (Week/Day format like Kanji)
+  selectedVocabWeek: string;
+  selectedVocabDay: string;
 
   // Common
   currentCardIndex: number;
@@ -56,11 +57,15 @@ interface StudyState {
   // Actions - App Mode
   setAppMode: (mode: AppMode) => void;
 
-  // Actions - Navigation
+  // Actions - Navigation Kanji
   setSelectedWeek: (week: string) => void;
   setSelectedDay: (day: string) => void;
-  setSelectedChapter: (chapter: string) => void;
-  setSelectedSection: (section: string) => void;
+
+  // Actions - Navigation Vocab
+  setSelectedVocabWeek: (week: string) => void;
+  setSelectedVocabDay: (day: string) => void;
+
+  // Actions - Common
   setCurrentCardIndex: (index: number) => void;
   nextCard: (totalCards: number) => void;
   prevCard: (totalCards: number) => void;
@@ -75,11 +80,11 @@ interface StudyState {
   setStudyMode: (mode: StudyMode) => void;
 
   // Actions - Progress
-  markAsKnown: (cardId: string) => void;
-  markAsUnknown: (cardId: string) => void;
+  markAsKnown: (cardId: string, scoreKey: string) => void;
+  markAsUnknown: (cardId: string, scoreKey: string) => void;
   toggleBookmark: (cardId: string) => void;
   resetDayProgress: () => void;
-  resetSectionProgress: () => void;
+  resetVocabDayProgress: () => void;
   resetAllProgress: () => void;
 
   // Actions - SRS
@@ -113,8 +118,8 @@ export const useStore = create<StudyState>()(
       selectedDay: 'Day 1',
 
       // Initial State - Navigation Vocab
-      selectedChapter: 'Chapter 1',
-      selectedSection: 'Section 1',
+      selectedVocabWeek: 'Week 1',
+      selectedVocabDay: 'Day 1',
 
       // Initial State - Common
       currentCardIndex: 0,
@@ -163,10 +168,11 @@ export const useStore = create<StudyState>()(
           showReading: false,
         }),
 
-      // Actions - Navigation
+      // Actions - Navigation Kanji
       setSelectedWeek: (week) =>
         set({
           selectedWeek: week,
+          selectedDay: 'Day 1',
           currentCardIndex: 0,
           isFlipped: false,
           showReading: false,
@@ -180,23 +186,25 @@ export const useStore = create<StudyState>()(
           showReading: false,
         }),
 
-      setSelectedChapter: (chapter) =>
+      // Actions - Navigation Vocab
+      setSelectedVocabWeek: (week) =>
         set({
-          selectedChapter: chapter,
-          selectedSection: 'Section 1',
+          selectedVocabWeek: week,
+          selectedVocabDay: 'Day 1',
           currentCardIndex: 0,
           isFlipped: false,
           showReading: false,
         }),
 
-      setSelectedSection: (section) =>
+      setSelectedVocabDay: (day) =>
         set({
-          selectedSection: section,
+          selectedVocabDay: day,
           currentCardIndex: 0,
           isFlipped: false,
           showReading: false,
         }),
 
+      // Actions - Common
       setCurrentCardIndex: (index) =>
         set({
           currentCardIndex: index,
@@ -229,12 +237,8 @@ export const useStore = create<StudyState>()(
       setStudyMode: (mode) => set({ studyMode: mode }),
 
       // Actions - Progress
-      markAsKnown: (cardId) =>
+      markAsKnown: (cardId, scoreKey) =>
         set((state) => {
-          const { appMode, selectedWeek, selectedDay, selectedChapter, selectedSection } = state;
-          const scoreKey = appMode === 'kanji'
-            ? `${selectedWeek}-${selectedDay}`
-            : `${selectedChapter}-${selectedSection}`;
           const currentScore = state.scores[scoreKey] || { correct: 0, total: 0 };
 
           return {
@@ -251,12 +255,8 @@ export const useStore = create<StudyState>()(
           };
         }),
 
-      markAsUnknown: (cardId) =>
+      markAsUnknown: (cardId, scoreKey) =>
         set((state) => {
-          const { appMode, selectedWeek, selectedDay, selectedChapter, selectedSection } = state;
-          const scoreKey = appMode === 'kanji'
-            ? `${selectedWeek}-${selectedDay}`
-            : `${selectedChapter}-${selectedSection}`;
           const currentScore = state.scores[scoreKey] || { correct: 0, total: 0 };
 
           return {
@@ -281,7 +281,7 @@ export const useStore = create<StudyState>()(
       resetDayProgress: () =>
         set((state) => {
           const { selectedWeek, selectedDay } = state;
-          const scoreKey = `${selectedWeek}-${selectedDay}`;
+          const scoreKey = `kanji-${selectedWeek}-${selectedDay}`;
           const prefix = generateCardId(selectedWeek, selectedDay, 0).slice(0, -1);
 
           return {
@@ -294,11 +294,11 @@ export const useStore = create<StudyState>()(
           };
         }),
 
-      resetSectionProgress: () =>
+      resetVocabDayProgress: () =>
         set((state) => {
-          const { selectedChapter, selectedSection } = state;
-          const scoreKey = `${selectedChapter}-${selectedSection}`;
-          const prefix = `vocab-${selectedChapter}-${selectedSection}`;
+          const { selectedVocabWeek, selectedVocabDay } = state;
+          const scoreKey = `vocab-${selectedVocabWeek}-${selectedVocabDay}`;
+          const prefix = generateVocabCardId(selectedVocabWeek, selectedVocabDay, 0).slice(0, -1);
 
           return {
             knownCards: state.knownCards.filter((id) => !id.startsWith(prefix)),
@@ -458,8 +458,8 @@ export const useStore = create<StudyState>()(
         settings: state.settings,
         selectedWeek: state.selectedWeek,
         selectedDay: state.selectedDay,
-        selectedChapter: state.selectedChapter,
-        selectedSection: state.selectedSection,
+        selectedVocabWeek: state.selectedVocabWeek,
+        selectedVocabDay: state.selectedVocabDay,
       }),
     }
   )
@@ -469,8 +469,8 @@ export const useStore = create<StudyState>()(
 export const useAppMode = () => useStore((state) => state.appMode);
 export const useSelectedWeek = () => useStore((state) => state.selectedWeek);
 export const useSelectedDay = () => useStore((state) => state.selectedDay);
-export const useSelectedChapter = () => useStore((state) => state.selectedChapter);
-export const useSelectedSection = () => useStore((state) => state.selectedSection);
+export const useSelectedVocabWeek = () => useStore((state) => state.selectedVocabWeek);
+export const useSelectedVocabDay = () => useStore((state) => state.selectedVocabDay);
 export const useCurrentCardIndex = () => useStore((state) => state.currentCardIndex);
 export const useIsFlipped = () => useStore((state) => state.isFlipped);
 export const useShowReading = () => useStore((state) => state.showReading);

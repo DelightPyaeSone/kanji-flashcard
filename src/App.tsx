@@ -1,15 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { RotateCcw, Home, ExternalLink } from 'lucide-react';
+import { RotateCcw, Home } from 'lucide-react';
 
 import { useStore } from '@/store';
 import { getWeeks, getDays, getCards, getTopic, generateCardId } from '@/data';
 import {
-  getVocabChapters,
-  getVocabSections,
+  getVocabWeeks,
+  getVocabDays,
   getVocabCards,
-  getVocabSectionTitle,
-  getVocabVideoUrl,
+  getVocabTopic,
   generateVocabCardId,
 } from '@/data/vocab';
 import { useKeyboard, useTheme } from '@/hooks';
@@ -18,7 +17,6 @@ import { cn } from '@/utils';
 import { HomeScreen } from '@/components/home';
 import { FlashCard } from '@/components/flashcard';
 import { WeekSelector, DaySelector } from '@/components/navigation';
-import { VocabFlashCard, ChapterSelector, SectionSelector } from '@/components/vocab';
 import { ProgressBar, Button } from '@/components/common';
 import { CardControls, SRSControls, StudyModeSelector } from '@/components/study';
 import { Header, Footer } from '@/components/layout';
@@ -32,14 +30,14 @@ const themeClasses = {
 
 export default function App() {
   const [showStats, setShowStats] = useState(false);
-  const { config, isDark, isSakura } = useTheme();
+  const { config } = useTheme();
 
   const {
     appMode,
     selectedWeek,
     selectedDay,
-    selectedChapter,
-    selectedSection,
+    selectedVocabWeek,
+    selectedVocabDay,
     currentCardIndex,
     isFlipped,
     showReading,
@@ -53,8 +51,8 @@ export default function App() {
     setAppMode,
     setSelectedWeek,
     setSelectedDay,
-    setSelectedChapter,
-    setSelectedSection,
+    setSelectedVocabWeek,
+    setSelectedVocabDay,
     nextCard,
     prevCard,
     toggleFlip,
@@ -65,23 +63,22 @@ export default function App() {
     markAsUnknown,
     gradeSRSCard,
     resetDayProgress,
-    resetSectionProgress,
+    resetVocabDayProgress,
     setTheme,
     updateStreak,
     refreshSRSQueue,
   } = useStore();
 
   // Get data based on app mode
-  const weeks = getWeeks();
-  const days = getDays(selectedWeek);
+  const kanjiWeeks = getWeeks();
+  const kanjiDays = getDays(selectedWeek);
   const kanjiCards = getCards(selectedWeek, selectedDay);
   const kanjiTopic = getTopic(selectedWeek, selectedDay);
 
-  const chapters = getVocabChapters();
-  const sections = getVocabSections(selectedChapter);
-  const vocabCards = getVocabCards(selectedChapter, selectedSection);
-  const vocabTitle = getVocabSectionTitle(selectedChapter, selectedSection);
-  const vocabVideoUrl = getVocabVideoUrl(selectedChapter, selectedSection);
+  const vocabWeeks = getVocabWeeks();
+  const vocabDays = getVocabDays(selectedVocabWeek);
+  const vocabCards = getVocabCards(selectedVocabWeek, selectedVocabDay);
+  const vocabTopic = getVocabTopic(selectedVocabWeek, selectedVocabDay);
 
   // Current cards based on mode
   const cards = appMode === 'kanji' ? kanjiCards : vocabCards;
@@ -89,17 +86,17 @@ export default function App() {
   const currentCardId = currentCard
     ? appMode === 'kanji'
       ? generateCardId(selectedWeek, selectedDay, currentCardIndex)
-      : generateVocabCardId(selectedChapter, selectedSection, currentCardIndex)
+      : generateVocabCardId(selectedVocabWeek, selectedVocabDay, currentCardIndex)
     : '';
 
   // Check if current card is bookmarked
   const isBookmarked = bookmarkedCards.includes(currentCardId);
 
-  // Get score for current day/section
+  // Get score for current day
   const scoreKey =
     appMode === 'kanji'
-      ? `${selectedWeek}-${selectedDay}`
-      : `${selectedChapter}-${selectedSection}`;
+      ? `kanji-${selectedWeek}-${selectedDay}`
+      : `vocab-${selectedVocabWeek}-${selectedVocabDay}`;
   const currentScore = scores[scoreKey] || { correct: 0, total: 0 };
 
   // Keyboard shortcuts
@@ -118,7 +115,7 @@ export default function App() {
     onGrade: studyMode === 'srs' ? handleSRSGrade : undefined,
   });
 
-  // Update streak on mount and day change
+  // Update streak on mount
   useEffect(() => {
     updateStreak();
   }, [updateStreak]);
@@ -135,12 +132,12 @@ export default function App() {
   const handlePrev = () => prevCard(cards.length);
 
   const handleKnown = () => {
-    markAsKnown(currentCardId);
+    markAsKnown(currentCardId, scoreKey);
     nextCard(cards.length);
   };
 
   const handleUnknown = () => {
-    markAsUnknown(currentCardId);
+    markAsUnknown(currentCardId, scoreKey);
     nextCard(cards.length);
   };
 
@@ -152,9 +149,19 @@ export default function App() {
     if (appMode === 'kanji') {
       resetDayProgress();
     } else {
-      resetSectionProgress();
+      resetVocabDayProgress();
     }
   };
+
+  // Current navigation values based on mode
+  const currentWeeks = appMode === 'kanji' ? kanjiWeeks : vocabWeeks;
+  const currentDays = appMode === 'kanji' ? kanjiDays : vocabDays;
+  const currentSelectedWeek = appMode === 'kanji' ? selectedWeek : selectedVocabWeek;
+  const currentSelectedDay = appMode === 'kanji' ? selectedDay : selectedVocabDay;
+  const currentTopic = appMode === 'kanji' ? kanjiTopic : vocabTopic;
+
+  const handleWeekChange = appMode === 'kanji' ? setSelectedWeek : setSelectedVocabWeek;
+  const handleDayChange = appMode === 'kanji' ? setSelectedDay : setSelectedVocabDay;
 
   // Render Home Screen
   if (appMode === 'home') {
@@ -219,69 +226,35 @@ export default function App() {
           </div>
         </div>
 
-        {/* Navigation Selectors */}
-        {appMode === 'kanji' ? (
-          <>
-            <div className="mb-6">
-              <WeekSelector
-                weeks={weeks}
-                selectedWeek={selectedWeek}
-                onSelectWeek={setSelectedWeek}
-              />
-            </div>
-            <div className="mb-6">
-              <DaySelector
-                days={days}
-                selectedDay={selectedDay}
-                onSelectDay={setSelectedDay}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="mb-6">
-              <ChapterSelector
-                chapters={chapters}
-                selectedChapter={selectedChapter}
-                onSelectChapter={setSelectedChapter}
-              />
-            </div>
-            <div className="mb-6">
-              <SectionSelector
-                sections={sections}
-                selectedSection={selectedSection}
-                onSelectSection={setSelectedSection}
-              />
-            </div>
-          </>
-        )}
+        {/* Week Selector */}
+        <div className="mb-6">
+          <WeekSelector
+            weeks={currentWeeks}
+            selectedWeek={currentSelectedWeek}
+            onSelectWeek={handleWeekChange}
+          />
+        </div>
 
-        {/* Topic / Title */}
-        {(appMode === 'kanji' ? kanjiTopic : vocabTitle) && (
+        {/* Day Selector */}
+        <div className="mb-6">
+          <DaySelector
+            days={currentDays}
+            selectedDay={currentSelectedDay}
+            onSelectDay={handleDayChange}
+          />
+        </div>
+
+        {/* Topic */}
+        {currentTopic && (
           <motion.div
             className="text-center mb-6 px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            key={appMode === 'kanji' ? kanjiTopic : vocabTitle}
+            key={currentTopic}
           >
             <p className={cn('text-sm md:text-base', config.textAccent)}>
-              📚 {appMode === 'kanji' ? kanjiTopic : vocabTitle}
+              📚 {currentTopic}
             </p>
-            {appMode === 'vocab' && vocabVideoUrl && (
-              <a
-                href={vocabVideoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  'inline-flex items-center gap-1 text-xs mt-2',
-                  'hover:underline',
-                  config.textMuted
-                )}
-              >
-                <ExternalLink className="w-3 h-3" />
-                Watch Video Lesson
-              </a>
-            )}
           </motion.div>
         )}
 
@@ -314,26 +287,15 @@ export default function App() {
               transition={{ duration: 0.3 }}
               className="mb-6"
             >
-              {appMode === 'kanji' ? (
-                <FlashCard
-                  card={currentCard as any}
-                  isFlipped={isFlipped}
-                  showReading={showReading}
-                  isBookmarked={isBookmarked}
-                  onFlip={toggleFlip}
-                  onToggleReading={toggleReading}
-                  onToggleBookmark={handleToggleBookmark}
-                />
-              ) : (
-                <VocabFlashCard
-                  card={currentCard as any}
-                  isFlipped={isFlipped}
-                  isBookmarked={isBookmarked}
-                  onFlip={toggleFlip}
-                  onToggleBookmark={handleToggleBookmark}
-                  videoUrl={vocabVideoUrl}
-                />
-              )}
+              <FlashCard
+                card={currentCard}
+                isFlipped={isFlipped}
+                showReading={showReading}
+                isBookmarked={isBookmarked}
+                onFlip={toggleFlip}
+                onToggleReading={toggleReading}
+                onToggleBookmark={handleToggleBookmark}
+              />
             </motion.div>
           )}
         </AnimatePresence>
