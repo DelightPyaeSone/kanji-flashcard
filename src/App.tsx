@@ -49,6 +49,8 @@ export default function App() {
     scores,
     streak,
     srsQueue,
+    unlockedProgress,
+    viewedCards,
     setAppMode,
     setSelectedWeek,
     setSelectedDay,
@@ -68,6 +70,7 @@ export default function App() {
     setTheme,
     updateStreak,
     refreshSRSQueue,
+    markCardViewed,
   } = useStore();
 
   // Get data based on app mode
@@ -128,6 +131,16 @@ export default function App() {
     }
   }, [studyMode, refreshSRSQueue]);
 
+  // Track card views when card is flipped
+  useEffect(() => {
+    if (isFlipped && currentCard) {
+      const mode = appMode === 'kanji' ? 'kanji' : 'vocab';
+      const week = appMode === 'kanji' ? selectedWeek : selectedVocabWeek;
+      const day = appMode === 'kanji' ? selectedDay : selectedVocabDay;
+      markCardViewed(mode, week, day, currentCardIndex, cards.length);
+    }
+  }, [isFlipped, currentCardIndex, appMode, selectedWeek, selectedDay, selectedVocabWeek, selectedVocabDay, cards.length, currentCard, markCardViewed]);
+
   // Handlers
   const handleNext = () => nextCard(cards.length);
   const handlePrev = () => prevCard(cards.length);
@@ -163,6 +176,50 @@ export default function App() {
 
   const handleWeekChange = appMode === 'kanji' ? setSelectedWeek : setSelectedVocabWeek;
   const handleDayChange = appMode === 'kanji' ? setSelectedDay : setSelectedVocabDay;
+
+  // Get unlock status for current mode
+  const currentMode = appMode === 'kanji' ? 'kanji' : 'vocab';
+  const unlockedWeeks = Object.keys(unlockedProgress[currentMode]);
+  const unlockedDays = unlockedProgress[currentMode][currentSelectedWeek] || [];
+
+  // Check which days are completed (all cards viewed)
+  const getCompletedDays = () => {
+    const completed: string[] = [];
+    currentDays.forEach(day => {
+      const key = `${currentSelectedWeek}-${day}`;
+      const viewed = viewedCards[currentMode][key] || [];
+      const dayCards = appMode === 'kanji'
+        ? getCards(currentSelectedWeek, day)
+        : getVocabCards(currentSelectedWeek, day);
+      if (viewed.length >= dayCards.length && dayCards.length > 0) {
+        completed.push(day);
+      }
+    });
+    return completed;
+  };
+
+  // Check which weeks are completed (all days completed)
+  const getCompletedWeeks = () => {
+    const completed: string[] = [];
+    currentWeeks.forEach(week => {
+      const weekDays = appMode === 'kanji' ? getDays(week) : getVocabDays(week);
+      const allDaysCompleted = weekDays.every(day => {
+        const key = `${week}-${day}`;
+        const viewed = viewedCards[currentMode][key] || [];
+        const dayCards = appMode === 'kanji'
+          ? getCards(week, day)
+          : getVocabCards(week, day);
+        return viewed.length >= dayCards.length && dayCards.length > 0;
+      });
+      if (allDaysCompleted) {
+        completed.push(week);
+      }
+    });
+    return completed;
+  };
+
+  const completedDays = getCompletedDays();
+  const completedWeeks = getCompletedWeeks();
 
   // Render Home Screen
   if (appMode === 'home') {
@@ -233,6 +290,8 @@ export default function App() {
             weeks={currentWeeks}
             selectedWeek={currentSelectedWeek}
             onSelectWeek={handleWeekChange}
+            unlockedWeeks={unlockedWeeks}
+            completedWeeks={completedWeeks}
           />
         </div>
 
@@ -242,6 +301,8 @@ export default function App() {
             days={currentDays}
             selectedDay={currentSelectedDay}
             onSelectDay={handleDayChange}
+            unlockedDays={unlockedDays}
+            completedDays={completedDays}
           />
         </div>
 

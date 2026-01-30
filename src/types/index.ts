@@ -102,3 +102,22 @@ export interface Progress {
   studyHistory: StudySession[];
   streak: StreakInfo;
 }
+
+// ========== Unlock System Types ==========
+export interface UnlockProgress {
+  kanji: {
+    [week: string]: string[]; // Array of unlocked days for each week
+  };
+  vocab: {
+    [week: string]: string[];
+  };
+}
+
+export interface ViewedCards {
+  kanji: {
+    [key: string]: string[]; // key = "Week 1-Day 1", value = array of viewed card indices
+  };
+  vocab: {
+    [key: string]: string[];
+  };
+}

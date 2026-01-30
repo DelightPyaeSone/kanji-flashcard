@@ -9,6 +9,8 @@ import type {
   StreakInfo,
   Settings,
   AppMode,
+  UnlockProgress,
+  ViewedCards,
 } from '@/types';
 import { createInitialSRSData, calculateNextReview, getDueCards } from '@/services/srs';
 import { generateCardId } from '@/data';
@@ -53,6 +55,10 @@ interface StudyState {
 
   // Settings
   settings: Settings;
+
+  // Unlock System
+  unlockedProgress: UnlockProgress;
+  viewedCards: ViewedCards;
 
   // Actions - App Mode
   setAppMode: (mode: AppMode) => void;
@@ -103,6 +109,13 @@ interface StudyState {
   setAutoFlipDelay: (delay: number | null) => void;
   toggleSound: () => void;
   toggleKeyboardShortcuts: () => void;
+
+  // Actions - Unlock System
+  markCardViewed: (mode: 'kanji' | 'vocab', week: string, day: string, cardIndex: number, totalCards: number) => void;
+  isDayUnlocked: (mode: 'kanji' | 'vocab', week: string, day: string) => boolean;
+  isWeekUnlocked: (mode: 'kanji' | 'vocab', week: string) => boolean;
+  getDayProgress: (mode: 'kanji' | 'vocab', week: string, day: string, totalCards: number) => number;
+  resetUnlockProgress: () => void;
 }
 
 const getToday = () => new Date().toISOString().split('T')[0];
@@ -157,6 +170,16 @@ export const useStore = create<StudyState>()(
         autoFlipDelay: null,
         soundEnabled: false,
         keyboardShortcutsEnabled: true,
+      },
+
+      // Initial State - Unlock System
+      unlockedProgress: {
+        kanji: { 'Week 1': ['Day 1'] },
+        vocab: { 'Week 1': ['Day 1'] },
+      },
+      viewedCards: {
+        kanji: {},
+        vocab: {},
       },
 
       // Actions - App Mode
@@ -442,6 +465,98 @@ export const useStore = create<StudyState>()(
             keyboardShortcutsEnabled: !state.settings.keyboardShortcutsEnabled,
           },
         })),
+
+      // Actions - Unlock System
+      markCardViewed: (mode, week, day, cardIndex, totalCards) =>
+        set((state) => {
+          const key = `${week}-${day}`;
+          const currentViewed = state.viewedCards[mode][key] || [];
+          const cardKey = String(cardIndex);
+
+          // Already viewed this card
+          if (currentViewed.includes(cardKey)) return state;
+
+          const newViewed = [...currentViewed, cardKey];
+          const newViewedCards = {
+            ...state.viewedCards,
+            [mode]: {
+              ...state.viewedCards[mode],
+              [key]: newViewed,
+            },
+          };
+
+          // Check if all cards viewed - unlock next day
+          let newUnlockedProgress = state.unlockedProgress;
+          if (newViewed.length >= totalCards) {
+            const dayNum = parseInt(day.replace('Day ', ''));
+            const weekNum = parseInt(week.replace('Week ', ''));
+            const nextDay = `Day ${dayNum + 1}`;
+            const nextWeek = `Week ${weekNum + 1}`;
+
+            const currentWeekUnlocked = state.unlockedProgress[mode][week] || [];
+
+            // If day 6 completed, unlock Week+1 Day 1
+            if (dayNum >= 6) {
+              const nextWeekUnlocked = state.unlockedProgress[mode][nextWeek] || [];
+              if (!nextWeekUnlocked.includes('Day 1')) {
+                newUnlockedProgress = {
+                  ...state.unlockedProgress,
+                  [mode]: {
+                    ...state.unlockedProgress[mode],
+                    [nextWeek]: ['Day 1'],
+                  },
+                };
+              }
+            } else {
+              // Unlock next day in same week
+              if (!currentWeekUnlocked.includes(nextDay)) {
+                newUnlockedProgress = {
+                  ...state.unlockedProgress,
+                  [mode]: {
+                    ...state.unlockedProgress[mode],
+                    [week]: [...currentWeekUnlocked, nextDay],
+                  },
+                };
+              }
+            }
+          }
+
+          return {
+            viewedCards: newViewedCards,
+            unlockedProgress: newUnlockedProgress,
+          };
+        }),
+
+      isDayUnlocked: (mode, week, day) => {
+        const state = get();
+        const weekUnlocked = state.unlockedProgress[mode][week] || [];
+        return weekUnlocked.includes(day);
+      },
+
+      isWeekUnlocked: (mode, week) => {
+        const state = get();
+        const weekUnlocked = state.unlockedProgress[mode][week];
+        return weekUnlocked !== undefined && weekUnlocked.length > 0;
+      },
+
+      getDayProgress: (mode, week, day, totalCards) => {
+        const state = get();
+        const key = `${week}-${day}`;
+        const viewed = state.viewedCards[mode][key] || [];
+        return totalCards > 0 ? Math.round((viewed.length / totalCards) * 100) : 0;
+      },
+
+      resetUnlockProgress: () =>
+        set({
+          unlockedProgress: {
+            kanji: { 'Week 1': ['Day 1'] },
+            vocab: { 'Week 1': ['Day 1'] },
+          },
+          viewedCards: {
+            kanji: {},
+            vocab: {},
+          },
+        }),
     }),
     {
       name: 'n2-master-storage',
@@ -460,6 +575,9 @@ export const useStore = create<StudyState>()(
         selectedDay: state.selectedDay,
         selectedVocabWeek: state.selectedVocabWeek,
         selectedVocabDay: state.selectedVocabDay,
+        // Unlock system
+        unlockedProgress: state.unlockedProgress,
+        viewedCards: state.viewedCards,
       }),
     }
   )
