@@ -25,7 +25,7 @@ export function FlashCard({
   onToggleBookmark,
   className,
 }: FlashCardProps) {
-  const { config, isDark, isSakura } = useTheme();
+  const { config, isDark } = useTheme();
 
   return (
     <div className={cn('perspective-1000', className)}>
@@ -33,18 +33,18 @@ export function FlashCard({
         className="relative w-full aspect-[4/3] md:aspect-[16/9] cursor-pointer"
         onClick={onFlip}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, type: 'spring', stiffness: 100 }}
+        transition={{ duration: 0.4, type: 'spring', stiffness: 120, damping: 20 }}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        {/* Front of Card */}
+        {/* Front of Card - Clean, minimal design */}
         <div
           className={cn(
-            'absolute inset-0 rounded-3xl p-6 md:p-10',
+            'absolute inset-0 rounded-xl p-6 md:p-8',
             'flex flex-col items-center justify-center',
             config.cardFrontBg,
-            'backdrop-blur-xl border',
+            'border',
             config.border,
-            isDark ? 'shadow-2xl shadow-purple-500/20' : 'shadow-2xl shadow-purple-200/50'
+            isDark ? 'shadow-lg shadow-black/20' : 'shadow-md'
           )}
           style={{ backfaceVisibility: 'hidden' }}
         >
@@ -55,24 +55,28 @@ export function FlashCard({
               onToggleBookmark();
             }}
             className={cn(
-              'absolute top-4 right-4 p-2 rounded-full transition-all',
-              isDark ? 'hover:bg-white/10' : 'hover:bg-slate-100',
-              isBookmarked ? 'text-yellow-500' : config.textMuted
+              'absolute top-3 right-3 p-2 rounded-lg transition-colors',
+              isDark ? 'hover:bg-slate-800' : 'hover:bg-slate-100',
+              isBookmarked ? 'text-amber-400' : config.textMuted
             )}
           >
             {isBookmarked ? (
-              <BookmarkCheck className="w-6 h-6" />
+              <BookmarkCheck className="w-5 h-5" />
             ) : (
-              <Bookmark className="w-6 h-6" />
+              <Bookmark className="w-5 h-5" />
             )}
           </button>
 
-          {/* Kanji */}
+          {/* Kanji - Large and prominent */}
           <motion.div
-            className={cn('text-7xl md:text-9xl font-bold drop-shadow-lg', config.text)}
-            initial={{ scale: 0.8, opacity: 0 }}
+            className={cn(
+              'text-7xl md:text-9xl font-bold',
+              config.text,
+              'select-none'
+            )}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
           >
             {card.kanji}
           </motion.div>
@@ -80,10 +84,9 @@ export function FlashCard({
           {/* Reading (toggleable) */}
           {showReading && (
             <motion.div
-              className={cn('text-2xl md:text-3xl mt-4', config.textSecondary)}
-              initial={{ opacity: 0, y: -10 }}
+              className={cn('text-xl md:text-2xl mt-4', config.textSecondary)}
+              initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
             >
               {card.reading}
             </motion.div>
@@ -96,39 +99,39 @@ export function FlashCard({
               onToggleReading();
             }}
             className={cn(
-              'mt-6 px-4 py-2 rounded-xl flex items-center gap-2',
-              'transition-all text-sm font-medium',
+              'mt-6 px-4 py-2 rounded-lg flex items-center gap-2',
+              'transition-colors text-sm font-medium',
               config.buttonSecondary
             )}
           >
             {showReading ? (
               <>
                 <EyeOff className="w-4 h-4" />
-                ဖျောက်ရန်
+                Hide Reading
               </>
             ) : (
               <>
                 <Eye className="w-4 h-4" />
-                အသံဖတ်ပုံပြရန်
+                Show Reading
               </>
             )}
           </button>
 
           {/* Hint */}
-          <p className={cn('absolute bottom-4 text-sm', config.textMuted)}>
-            Click to flip • Space နှိပ်ပါ
+          <p className={cn('absolute bottom-3 text-xs', config.textMuted)}>
+            Tap to flip
           </p>
         </div>
 
-        {/* Back of Card */}
+        {/* Back of Card - Clean info layout */}
         <div
           className={cn(
-            'absolute inset-0 rounded-3xl p-6 md:p-10',
-            'flex flex-col items-center justify-center',
+            'absolute inset-0 rounded-xl p-6 md:p-8',
+            'flex flex-col items-center justify-center gap-3',
             config.cardBackBg,
-            'backdrop-blur-xl border',
+            'border',
             config.border,
-            isDark ? 'shadow-2xl shadow-blue-500/20' : 'shadow-2xl shadow-blue-200/50'
+            isDark ? 'shadow-lg shadow-black/20' : 'shadow-md'
           )}
           style={{
             backfaceVisibility: 'hidden',
@@ -142,46 +145,47 @@ export function FlashCard({
               onToggleBookmark();
             }}
             className={cn(
-              'absolute top-4 right-4 p-2 rounded-full transition-all',
-              isDark ? 'hover:bg-white/10' : 'hover:bg-slate-100',
-              isBookmarked ? 'text-yellow-500' : config.textMuted
+              'absolute top-3 right-3 p-2 rounded-lg transition-colors',
+              isDark ? 'hover:bg-slate-700' : 'hover:bg-slate-100',
+              isBookmarked ? 'text-amber-400' : config.textMuted
             )}
           >
             {isBookmarked ? (
-              <BookmarkCheck className="w-6 h-6" />
+              <BookmarkCheck className="w-5 h-5" />
             ) : (
-              <Bookmark className="w-6 h-6" />
+              <Bookmark className="w-5 h-5" />
             )}
           </button>
 
           {/* Kanji */}
-          <div className={cn('text-5xl md:text-7xl font-bold mb-3', config.text)}>
+          <div className={cn('text-4xl md:text-6xl font-bold', config.text)}>
             {card.kanji}
           </div>
 
           {/* Reading */}
-          <div className={cn('text-xl md:text-2xl mb-2', config.textSecondary)}>
+          <div className={cn('text-lg md:text-xl', config.textAccent)}>
             {card.reading}
           </div>
 
+          {/* Divider */}
+          <div className={cn('w-16 h-px my-1', isDark ? 'bg-slate-700' : 'bg-slate-200')} />
+
           {/* English Meaning */}
-          <div className={cn('text-lg md:text-xl mb-3', config.textAccent)}>
+          <div className={cn('text-base md:text-lg', config.textSecondary)}>
             {card.meaning}
           </div>
 
           {/* Myanmar Translation */}
           <div
             className={cn(
-              'text-xl md:text-2xl font-medium',
-              'px-6 py-3 rounded-2xl border',
+              'text-lg md:text-xl font-medium mt-2',
+              'px-4 py-2 rounded-lg border',
               isDark
-                ? 'text-yellow-300 bg-white/10 border-yellow-400/20'
-                : isSakura
-                  ? 'text-amber-700 bg-amber-50/80 border-amber-200'
-                  : 'text-amber-700 bg-amber-50 border-amber-200'
+                ? 'text-amber-300 bg-amber-900/30 border-amber-800'
+                : 'text-amber-700 bg-amber-50 border-amber-200'
             )}
           >
-            🇲🇲 {card.myanmar}
+            {card.myanmar}
           </div>
         </div>
       </motion.div>

@@ -1,0 +1,446 @@
+import type { WeekData } from '@/types';
+
+// N2 Sōmatome Vocabulary - Week 8
+// Topic: まとめて覚えましょう③ (Let's memorize together 3)
+// Source: Osaka City Japanese Language Center
+
+export const vocabWeek8: WeekData = {
+  'Day 1': {
+    topic: 'よく使われる表現①',
+    cards: [
+      {
+        kanji: '気を関する言葉',
+        reading: 'きをかんするいことば',
+        meaning: 'words about feelings',
+        myanmar: 'စိတ်နှင့်ပတ်သက်သောစကားလုံးများ',
+      },
+      {
+        kanji: '気が合う',
+        reading: 'きがあう',
+        meaning: 'get along well',
+        myanmar: 'သဘောထားတိုက်ဆိုင်သည်',
+      },
+      {
+        kanji: '気が重い',
+        reading: 'きがおもい',
+        meaning: 'feel heavy-hearted',
+        myanmar: 'စိတ်လေးသည်',
+      },
+      {
+        kanji: '気が軽い',
+        reading: 'きがかるい',
+        meaning: 'feel light-hearted',
+        myanmar: 'စိတ်ပေါ့သည်',
+      },
+      {
+        kanji: '気が利く',
+        reading: 'きがきく',
+        meaning: 'thoughtful',
+        myanmar: 'နားလည်တတ်သည်',
+      },
+      {
+        kanji: '気が散る',
+        reading: 'きがちる',
+        meaning: 'distracted',
+        myanmar: 'အာရုံပျံ့သည်',
+      },
+      {
+        kanji: '気が済む',
+        reading: 'きがすむ',
+        meaning: 'feel satisfied',
+        myanmar: 'စိတ်ချမ်းသာသည်',
+      },
+      {
+        kanji: '気が進まない',
+        reading: 'きがすすまない',
+        meaning: 'reluctant',
+        myanmar: 'စိတ်မပါသည်',
+      },
+      {
+        kanji: '気が向く',
+        reading: 'きがむく',
+        meaning: 'feel inclined',
+        myanmar: 'စိတ်ဝင်စားသည်',
+      },
+      {
+        kanji: '気に入る',
+        reading: 'きにいる',
+        meaning: 'to like',
+        myanmar: 'ကြိုက်သည်',
+      },
+      {
+        kanji: '気にする',
+        reading: 'きにする',
+        meaning: 'to worry about',
+        myanmar: 'စိုးရိမ်သည်',
+      },
+      {
+        kanji: '気になる',
+        reading: 'きになる',
+        meaning: 'to be concerned',
+        myanmar: 'စိတ်ပူသည်',
+      },
+    ],
+  },
+  'Day 2': {
+    topic: 'よく使われる表現②',
+    cards: [
+      {
+        kanji: '気を関する言葉②',
+        reading: 'きをかんするいことば②',
+        meaning: 'words about feelings 2',
+        myanmar: 'စိတ်နှင့်ပတ်သက်သောစကားလုံးများ②',
+      },
+      {
+        kanji: '気をつける',
+        reading: 'きをつける',
+        meaning: 'to be careful',
+        myanmar: 'သတိထားသည်',
+      },
+      {
+        kanji: '気を使う',
+        reading: 'きをつかう',
+        meaning: 'to be considerate',
+        myanmar: 'သတိထားဂရုစိုက်သည်',
+      },
+      {
+        kanji: '気を配る',
+        reading: 'きをくばる',
+        meaning: 'to pay attention',
+        myanmar: 'ဂရုစိုက်သည်',
+      },
+      {
+        kanji: '気を取られる',
+        reading: 'きをとられる',
+        meaning: 'distracted by',
+        myanmar: 'အာရုံလွဲသွားသည်',
+      },
+      {
+        kanji: '気を許す',
+        reading: 'きをゆるす',
+        meaning: 'to let guard down',
+        myanmar: 'သတိလျော့သည်',
+      },
+      {
+        kanji: '〜気味',
+        reading: '〜ぎみ',
+        meaning: 'slight tendency',
+        myanmar: '〜နည်းနည်း',
+      },
+      {
+        kanji: '風邪気味',
+        reading: 'かぜぎみ',
+        meaning: 'slight cold',
+        myanmar: 'အအေးမိနည်းနည်း',
+      },
+      {
+        kanji: '疲れ気味',
+        reading: 'つかれぎみ',
+        meaning: 'slightly tired',
+        myanmar: 'ပင်ပန်းနည်းနည်း',
+      },
+      {
+        kanji: '太り気味',
+        reading: 'ふとりぎみ',
+        meaning: 'slightly overweight',
+        myanmar: 'ဝနည်းနည်း',
+      },
+      {
+        kanji: '遅れ気味',
+        reading: 'おくれぎみ',
+        meaning: 'slightly late',
+        myanmar: 'နောက်ကျနည်းနည်း',
+      },
+    ],
+  },
+  'Day 3': {
+    topic: 'よく使われる表現①',
+    cards: [
+      {
+        kanji: '彼の日本語は目に見えて上達している',
+        reading: 'かれのにほんごはめにみえてじょうたつしている',
+        meaning: 'his Japanese improved visibly',
+        myanmar: 'သူ့ရဲ့ဂျပန်စကားမျက်စိရှေ့မှာတိုးတက်လာတယ်။',
+      },
+      {
+        kanji: '環境問題に目を向けよう',
+        reading: 'かんきょうもんだいにめをむけよう',
+        meaning: 'let\'s focus on environmental issues',
+        myanmar: 'ပတ်ဝန်းကျင်ထိန်းသိမ်းရေးနှောက်ရေးပြသနာကိုအာရုံစိုက်ကြရအောင်။',
+      },
+      {
+        kanji: '歩き始めの幼児は目が離せない',
+        reading: 'あるきはじめのようじはめがはなせない',
+        meaning: 'can\'t take eyes off toddler',
+        myanmar: 'လမ်းလျှောက်လေ့ကျင့်တဲ့ကလေးကိုမျက်စိလွှဲထားလို့မရတဲ့။',
+      },
+      {
+        kanji: '目に付くところに置く',
+        reading: 'めにつくところにおく',
+        meaning: 'put in visible place',
+        myanmar: 'မြင်နိုင်ခဲ့နေရာမှာထားသည်။',
+      },
+      {
+        kanji: '甘いものに目がない',
+        reading: 'あまいものにめがない',
+        meaning: 'have weakness for sweets',
+        myanmar: 'အချိုအရမ်းကြိုက်တယ်။',
+      },
+      {
+        kanji: '目が回るように忙しい',
+        reading: 'めがまわるようにいそがしい',
+        meaning: 'dizzily busy',
+        myanmar: 'မျက်စိလည်အောင်အလုပ်များသည်။',
+      },
+      {
+        kanji: '母の姿が目に浮かぶ',
+        reading: 'ははのすがたがめにうかぶ',
+        meaning: 'mother\'s image floats before eyes',
+        myanmar: 'အမေ့ရုပ်ပုံလုံးဝုံးထမှာပေါ်လာတယ်။',
+      },
+      {
+        kanji: '学生のレポートに目を通す',
+        reading: 'がくせいのレポートにめをとおす',
+        meaning: 'skim through reports',
+        myanmar: 'ကျောင်းသားတွေရဲ့အစီရင်ခံစာကိုအကြမ်းဖျင်းစိစစ်တယ်။',
+      },
+      {
+        kanji: '親の目を盗んで遊びに行く',
+        reading: 'おやのめをぬすんであそびにいく',
+        meaning: 'sneak away from parents',
+        myanmar: 'မိဘတွေမသိအောင်ကစားဖို့သွားတယ်။',
+      },
+      {
+        kanji: 'ひどい目にあう',
+        reading: 'ひどいめにあう',
+        meaning: 'have awful experience',
+        myanmar: 'ဆိုးရွားမှုနဲ့တွေ့ရတယ်။',
+      },
+      {
+        kanji: '大変な目にあう',
+        reading: 'たいへんなめにあう',
+        meaning: 'have terrible time',
+        myanmar: 'ပင်ပန်းခက်ခဲမှုနဲ့တွေ့တယ်။',
+      },
+      {
+        kanji: '危険な目にあう',
+        reading: 'きけんなめにあう',
+        meaning: 'face danger',
+        myanmar: 'အန္တရာယ်နဲ့တွေ့ရတယ်။',
+      },
+      {
+        kanji: '彼が結婚するといううわさを耳にした',
+        reading: 'かれがけっこんするといううわさをみみにした',
+        meaning: 'heard rumor of his marriage',
+        myanmar: 'သူကလေထောင်တော့မယ်ဆိုတဲ့ကောလဟာလကိုကြားခဲ့ရတယ်။',
+      },
+      {
+        kanji: '欠点を言われて耳が痛い',
+        reading: 'けってんをいわれてみみがいたい',
+        meaning: 'hurts to hear faults',
+        myanmar: 'အားနည်းချက်ပြောခံရလို့နားမခံသာဘူး။',
+      },
+    ],
+  },
+  'Day 4': {
+    topic: 'まとめの表現①',
+    cards: [
+      {
+        kanji: 'まし',
+        reading: 'まし',
+        meaning: 'better (than nothing)',
+        myanmar: 'တော်သေးသည်',
+      },
+      {
+        kanji: 'そんなことするぐらいなら、死んだほうがまし',
+        reading: 'そんなことするぐらいなら、しんだほうがまし',
+        meaning: 'rather die than do that',
+        myanmar: 'ဒီလိုလုပ်မည့်စားသေတာပိုကောင်းသေးတယ်',
+      },
+      {
+        kanji: 'まともな',
+        reading: 'まともな',
+        meaning: 'decent, proper',
+        myanmar: 'သိမ့်မွေ့ဆင်ခြင်ရှိသည်',
+      },
+      {
+        kanji: 'まともな生活をする',
+        reading: 'まともなせいかつをする',
+        meaning: 'live a decent life',
+        myanmar: 'သိမ့်မွေ့ဆင်ခြင်ရှိသောဘဝနေထိုင်သည်',
+      },
+      {
+        kanji: 'ろくな〜ない/ろくに〜ない',
+        reading: 'ろくな〜ない/ろくに〜ない',
+        meaning: 'not decent/properly',
+        myanmar: 'သိမ့်မွေ့မဟုတ်သော〜ကောင်း〜မဟုတ်',
+      },
+      {
+        kanji: '薬はろくに料理を作らない',
+        reading: 'くすりはろくにりょうりをつくらない',
+        meaning: 'hardly cook properly',
+        myanmar: 'မုန့်ဆိုင်ကျွမ်းကျင်လို့မပြုတ်ပါဘူး',
+      },
+      {
+        kanji: '失礼ものはありませんが、どうぞ召し上がって',
+        reading: 'しつれいものはありませんが、どうぞめしあがって',
+        meaning: 'it\'s nothing special, please eat',
+        myanmar: 'ဟာသားစားစရာကောင်းပစ္စည်းမဟုတ်ပါဘူး(လက်ဆောင်ပေးတဲ့အကြောင်း)',
+      },
+      {
+        kanji: 'あっという間',
+        reading: 'あっというま',
+        meaning: 'in an instant',
+        myanmar: 'တစ်ခဏအတွင်း',
+      },
+      {
+        kanji: 'あれこれ/あれやこれや/なんだかんだ',
+        reading: 'あれこれ/あれやこれや/なんだかんだ',
+        meaning: 'this and that',
+        myanmar: 'ဒီဟာဟိုဟာပြောင်းသည်',
+      },
+      {
+        kanji: 'あれこれ言っても、もう間に合わない',
+        reading: 'あれこれいっても、もうまにあわない',
+        meaning: 'no matter what, it\'s too late',
+        myanmar: 'ဘာပဲပြောပြော အချိန်မမီတော့ဘူး',
+      },
+    ],
+  },
+  'Day 5': {
+    topic: 'まとめの表現②',
+    cards: [
+      {
+        kanji: '当たり前',
+        reading: 'あたりまえ',
+        meaning: 'natural, obvious',
+        myanmar: 'သဘာဝကျသည်',
+      },
+      {
+        kanji: 'うそをつかれて怒るのは当たり前だ',
+        reading: 'うそをつかれておこるのはあたりまえだ',
+        meaning: 'natural to be angry when lied to',
+        myanmar: 'လိမ်ခံရလို့စိတ်ဆိုးတာသဘာဝကျတယ်',
+      },
+      {
+        kanji: '当たり前のやり方では成功しないだろう',
+        reading: 'あたりまえのやりかたではせいこうしないだろう',
+        meaning: 'won\'t succeed with ordinary methods',
+        myanmar: 'ပုံမှန်နည်းလမ်းဖြင့်အောင်မြင်မှာမဟုတ်ဘူး',
+      },
+      {
+        kanji: '家で過ごす',
+        reading: 'いえですごす',
+        meaning: 'spend time at home',
+        myanmar: 'အိမ်ထဲတွင်အချိန်ကုန်သည်',
+      },
+      {
+        kanji: 'ゆっくりする',
+        reading: 'ゆっくりする',
+        meaning: 'to relax',
+        myanmar: 'အေးအေးဆေးဆေးနေသည်',
+      },
+      {
+        kanji: 'のんびりする',
+        reading: 'のんびりする',
+        meaning: 'to take it easy',
+        myanmar: 'အနားယူသည်',
+      },
+      {
+        kanji: 'くつろぐ',
+        reading: 'くつろぐ',
+        meaning: 'to relax',
+        myanmar: 'အိမ်တွင်သက်တောင့်သက်သာနေသည်',
+      },
+      {
+        kanji: '快適に暮らす',
+        reading: 'かいてきにくらす',
+        meaning: 'live comfortably',
+        myanmar: 'သက်တောင့်သက်သာနေထိုင်သည်',
+      },
+      {
+        kanji: '半額セール',
+        reading: 'はんがくセール',
+        meaning: 'half-price sale',
+        myanmar: 'တစ်ဝက်ဈေး',
+      },
+      {
+        kanji: '手ごろな価格',
+        reading: 'てごろなかかく',
+        meaning: 'affordable price',
+        myanmar: 'လက်လှမ်းမီသော၊ တတ်နိုင်သောဈေးနှုန်း',
+      },
+    ],
+  },
+  'Day 6': {
+    topic: 'まとめの表現③',
+    cards: [
+      {
+        kanji: '時間を関する言葉',
+        reading: 'じかんをかんするいことば',
+        meaning: 'words about time',
+        myanmar: 'အချိန်နှင့်ပတ်သက်သောစကားလုံးများ',
+      },
+      {
+        kanji: '時間に追われる',
+        reading: 'じかんにおわれる',
+        meaning: 'pressed for time',
+        myanmar: 'အချိန်နောက်ကျသည်',
+      },
+      {
+        kanji: '時間をかける',
+        reading: 'じかんをかける',
+        meaning: 'to spend time',
+        myanmar: 'အချိန်ယူသည်',
+      },
+      {
+        kanji: '時間がたつ',
+        reading: 'じかんがたつ',
+        meaning: 'time passes',
+        myanmar: 'အချိန်ကုန်သွားသည်',
+      },
+      {
+        kanji: '時間をつぶす',
+        reading: 'じかんをつぶす',
+        meaning: 'to kill time',
+        myanmar: 'အချိန်ဖြတ်သည်',
+      },
+      {
+        kanji: '時間を持て余す',
+        reading: 'じかんをもてあます',
+        meaning: 'have too much time',
+        myanmar: 'အချိန်ပိုနေသည်',
+      },
+      {
+        kanji: '言葉を関する言葉',
+        reading: 'ことばをかんするいことば',
+        meaning: 'words about language',
+        myanmar: 'စကားနှင့်ပတ်သက်သောစကားလုံးများ',
+      },
+      {
+        kanji: '言葉を濁す',
+        reading: 'ことばをにごす',
+        meaning: 'to be vague',
+        myanmar: 'ရှင်းရှင်းမပြောသည်',
+      },
+      {
+        kanji: '言葉に詰まる',
+        reading: 'ことばにつまる',
+        meaning: 'at a loss for words',
+        myanmar: 'စကားပြတ်သွားသည်',
+      },
+      {
+        kanji: '言葉を選ぶ',
+        reading: 'ことばをえらぶ',
+        meaning: 'to choose words',
+        myanmar: 'စကားလုံးရွေးသည်',
+      },
+      {
+        kanji: '言葉遣い',
+        reading: 'ことばづかい',
+        meaning: 'way of speaking',
+        myanmar: 'စကားလုံးသုံးပုံ',
+      },
+    ],
+  },
+};

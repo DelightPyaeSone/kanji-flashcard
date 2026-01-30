@@ -13,7 +13,7 @@ export function WeekSelector({
   selectedWeek,
   onSelectWeek,
 }: WeekSelectorProps) {
-  const { config, isSakura } = useTheme();
+  const { config, isDark } = useTheme();
 
   return (
     <div className="flex flex-wrap gap-2 justify-center">
@@ -22,17 +22,17 @@ export function WeekSelector({
           key={week}
           onClick={() => onSelectWeek(week)}
           className={cn(
-            'px-4 py-2 rounded-full text-sm font-medium transition-all duration-300',
+            'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+            'border',
             selectedWeek === week
-              ? cn(
-                  config.cardBgActive,
-                  'text-white',
-                  isSakura ? 'shadow-lg shadow-rose-400/30' : 'shadow-lg shadow-purple-500/30'
+              ? cn(config.selectorActive, isDark ? 'border-cyan-500' : 'border-transparent')
+              : cn(
+                  config.selectorInactive,
+                  isDark ? 'border-slate-800' : 'border-slate-200'
                 )
-              : config.buttonSecondary
           )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           {week}
         </motion.button>

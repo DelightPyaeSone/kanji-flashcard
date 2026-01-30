@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Sun, Moon, Flower2, BarChart3, Search, Settings } from 'lucide-react';
+import { Sun, Moon, Flower2, BarChart3 } from 'lucide-react';
 import type { Theme } from '@/types';
 import { cn } from '@/utils';
 import { themeConfig } from '@/hooks/useTheme';
@@ -9,8 +9,6 @@ interface HeaderProps {
   onThemeChange: (theme: Theme) => void;
   streak: number;
   onOpenStats?: () => void;
-  onOpenSearch?: () => void;
-  onOpenSettings?: () => void;
   title?: string;
 }
 
@@ -25,133 +23,84 @@ export function Header({
   onThemeChange,
   streak,
   onOpenStats,
-  onOpenSearch,
-  onOpenSettings,
   title,
 }: HeaderProps) {
   const config = themeConfig[theme];
-  const isSakura = theme === 'sakura';
 
   return (
-    <header className="text-center mb-8">
-      {/* Title */}
+    <header className="text-center mb-6">
+      {/* Title - Clean flat text */}
       <motion.h1
-        className={cn(
-          'text-3xl md:text-5xl font-bold mb-2',
-          isSakura
-            ? 'bg-gradient-to-r from-rose-400 via-pink-400 to-rose-400 bg-clip-text text-transparent'
-            : 'bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent'
-        )}
-        initial={{ opacity: 0, y: -20 }}
+        className={cn('text-2xl md:text-4xl font-bold mb-1', config.text)}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.3 }}
       >
         {title ? `N2 ${title}` : 'N2 Master'}
       </motion.h1>
 
-      <motion.h2
-        className={cn('text-xl md:text-2xl font-light mb-4', config.textAccent)}
+      <motion.p
+        className={cn('text-sm md:text-base mb-4', config.textMuted)}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.1 }}
       >
         {title === '漢字'
-          ? 'Kanji Flash Cards • မြန်မာဘာသာပြန်'
+          ? 'Kanji Flash Cards'
           : title === '単語'
-            ? 'Vocabulary Flash Cards • မြန်မာဘာသာပြန်'
-            : 'JLPT N2 Study App • မြန်မာဘာသာပြန်'
+            ? 'Vocabulary Flash Cards'
+            : 'JLPT N2 Study App'
         }
-      </motion.h2>
+      </motion.p>
 
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        {/* Theme Selector */}
-        <div className={cn('flex items-center gap-1 rounded-xl p-1', config.selectorBg)}>
+      {/* Compact Toolbar */}
+      <div className="flex items-center justify-center gap-2">
+        {/* Theme Selector - Minimal */}
+        <div className={cn('flex items-center gap-0.5 rounded-lg p-0.5', config.selectorBg)}>
           {themes.map(({ theme: t, icon: Icon }) => (
-            <motion.button
+            <button
               key={t}
               onClick={() => onThemeChange(t)}
               className={cn(
-                'p-2.5 rounded-lg transition-all',
+                'p-2 rounded-md transition-colors',
                 theme === t ? config.selectorActive : config.selectorInactive
               )}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
               title={t.charAt(0).toUpperCase() + t.slice(1)}
             >
-              <Icon className="w-5 h-5" />
-            </motion.button>
+              <Icon className="w-4 h-4" />
+            </button>
           ))}
         </div>
 
-        {/* Streak Badge */}
+        {/* Streak Badge - Minimal */}
         {streak > 0 && (
-          <motion.div
+          <div
             className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-xl border',
-              config.badgeBg
+              'flex items-center gap-1 px-2.5 py-1.5 rounded-lg',
+              config.selectorBg
             )}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring' }}
           >
-            <span className="text-lg">🔥</span>
-            <span className={cn('font-medium', config.badgeText)}>
-              {streak} days
+            <span className="text-sm">🔥</span>
+            <span className={cn('text-sm font-medium', config.textAccent)}>
+              {streak}
             </span>
-          </motion.div>
+          </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-1">
-          {onOpenSearch && (
-            <motion.button
-              onClick={onOpenSearch}
-              className={cn(
-                'p-2.5 rounded-lg transition-all',
-                config.selectorInactive,
-                theme === 'dark' ? 'hover:bg-white/10' : isSakura ? 'hover:bg-rose-50' : 'hover:bg-slate-100'
-              )}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              title="Search"
-            >
-              <Search className="w-5 h-5" />
-            </motion.button>
-          )}
-
-          {onOpenStats && (
-            <motion.button
-              onClick={onOpenStats}
-              className={cn(
-                'p-2.5 rounded-lg transition-all',
-                config.selectorInactive,
-                theme === 'dark' ? 'hover:bg-white/10' : isSakura ? 'hover:bg-rose-50' : 'hover:bg-slate-100'
-              )}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              title="Statistics"
-            >
-              <BarChart3 className="w-5 h-5" />
-            </motion.button>
-          )}
-
-          {onOpenSettings && (
-            <motion.button
-              onClick={onOpenSettings}
-              className={cn(
-                'p-2.5 rounded-lg transition-all',
-                config.selectorInactive,
-                theme === 'dark' ? 'hover:bg-white/10' : isSakura ? 'hover:bg-rose-50' : 'hover:bg-slate-100'
-              )}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              title="Settings"
-            >
-              <Settings className="w-5 h-5" />
-            </motion.button>
-          )}
-        </div>
+        {/* Stats Button - Minimal */}
+        {onOpenStats && (
+          <button
+            onClick={onOpenStats}
+            className={cn(
+              'p-2 rounded-lg transition-colors',
+              config.selectorBg,
+              config.selectorInactive
+            )}
+            title="Statistics"
+          >
+            <BarChart3 className="w-4 h-4" />
+          </button>
+        )}
       </div>
     </header>
   );

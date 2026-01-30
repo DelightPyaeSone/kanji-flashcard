@@ -15,32 +15,28 @@ export function ProgressBar({
   correct,
   className,
 }: ProgressBarProps) {
-  const { config, isSakura } = useTheme();
+  const { config, isDark } = useTheme();
   const progress = total > 0 ? (current / total) * 100 : 0;
 
   return (
     <div className={cn('w-full', className)}>
-      <div className={cn('flex justify-between text-sm mb-2', config.textAccent)}>
+      <div className={cn('flex justify-between text-sm mb-2', config.textMuted)}>
         <span>
-          Card {current} of {total}
+          {current} / {total}
         </span>
         {correct !== undefined && (
-          <span className={isSakura ? 'text-green-600' : 'text-green-500'}>
-            ✓ {correct}
+          <span className={isDark ? 'text-emerald-400' : 'text-emerald-600'}>
+            {correct} correct
           </span>
         )}
       </div>
-      <div className={cn('h-2 rounded-full overflow-hidden', config.progressBg)}>
+      <div className={cn('h-1.5 rounded-full overflow-hidden', config.progressBg)}>
         <motion.div
-          className={cn(
-            'h-full',
-            isSakura
-              ? 'bg-gradient-to-r from-rose-400 via-pink-400 to-rose-500'
-              : 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500'
-          )}
+          className={config.progressFill}
+          style={{ height: '100%' }}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
         />
       </div>
     </div>

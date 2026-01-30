@@ -1,150 +1,164 @@
 import { useStore } from '@/store';
 import type { Theme } from '@/types';
 
+// Minimalist Kanji Study-inspired theme
+// Clean, flat design with subtle accents
 export const themeConfig = {
   dark: {
-    // Background
-    bg: 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900',
+    // Background - flat dark
+    bg: 'bg-slate-950',
     // Text colors
-    text: 'text-white',
-    textMuted: 'text-white/60',
-    textAccent: 'text-purple-300',
-    textSecondary: 'text-cyan-300',
-    textHighlight: 'text-yellow-300',
-    // Card styles
-    cardBg: 'bg-white/10 backdrop-blur-xl',
-    cardBgActive: 'bg-gradient-to-r from-pink-500 to-purple-500',
-    cardBgHover: 'hover:bg-white/20',
-    cardFrontBg: 'bg-gradient-to-br from-indigo-500/30 via-purple-500/30 to-pink-500/30',
-    cardBackBg: 'bg-gradient-to-br from-cyan-500/30 via-blue-500/30 to-indigo-500/30',
+    text: 'text-slate-50',
+    textMuted: 'text-slate-400',
+    textAccent: 'text-cyan-400',
+    textSecondary: 'text-slate-300',
+    textHighlight: 'text-amber-400',
+    // Card styles - flat, minimal
+    cardBg: 'bg-slate-900 border border-slate-800',
+    cardBgActive: 'bg-cyan-600',
+    cardBgHover: 'hover:bg-slate-800',
+    cardFrontBg: 'bg-slate-900',
+    cardBackBg: 'bg-slate-800',
     // Border
-    border: 'border-white/10',
-    borderActive: 'border-purple-400/30',
-    // Buttons
-    buttonPrimary: 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30',
-    buttonSecondary: 'bg-white/10 text-white hover:bg-white/20',
-    buttonDanger: 'bg-red-500/20 text-red-300 border border-red-500/50 hover:bg-red-500/30',
-    buttonSuccess: 'bg-green-500/20 text-green-300 border border-green-500/50 hover:bg-green-500/30',
-    buttonGhost: 'bg-transparent hover:bg-white/10 text-white/70',
+    border: 'border-slate-800',
+    borderActive: 'border-cyan-500',
+    // Buttons - flat with borders
+    buttonPrimary: 'bg-cyan-600 hover:bg-cyan-500 text-white',
+    buttonSecondary: 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700',
+    buttonDanger: 'bg-rose-900/50 text-rose-300 border border-rose-800 hover:bg-rose-900/70',
+    buttonSuccess: 'bg-emerald-900/50 text-emerald-300 border border-emerald-800 hover:bg-emerald-900/70',
+    buttonGhost: 'bg-transparent hover:bg-slate-800 text-slate-400 hover:text-slate-200',
     // Interactive elements
-    selectorBg: 'bg-white/5',
-    selectorActive: 'bg-white/20 text-white',
-    selectorInactive: 'text-white/50 hover:text-white/80',
-    // SRS grades
-    gradeEasy: 'bg-green-500/20 hover:bg-green-500/30 text-green-300',
-    gradeGood: 'bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300',
-    gradeHard: 'bg-red-500/20 hover:bg-red-500/30 text-red-300',
+    selectorBg: 'bg-slate-900',
+    selectorActive: 'bg-cyan-600 text-white',
+    selectorInactive: 'text-slate-400 hover:text-slate-200 hover:bg-slate-800',
+    // SRS grades - cleaner colors
+    gradeEasy: 'bg-emerald-900/50 hover:bg-emerald-900/70 text-emerald-300 border border-emerald-800',
+    gradeGood: 'bg-amber-900/50 hover:bg-amber-900/70 text-amber-300 border border-amber-800',
+    gradeHard: 'bg-rose-900/50 hover:bg-rose-900/70 text-rose-300 border border-rose-800',
     // Progress and stats
-    progressBg: 'bg-white/10',
-    statBg: 'bg-white/5 border-white/10',
+    progressBg: 'bg-slate-800',
+    progressFill: 'bg-cyan-500',
+    statBg: 'bg-slate-900 border-slate-800',
     // Footer
-    footerText: 'text-purple-300/40',
-    footerMuted: 'text-purple-300/50',
-    keyBg: 'bg-white/5',
+    footerText: 'text-slate-500',
+    footerMuted: 'text-slate-600',
+    keyBg: 'bg-slate-800',
     // Modal
-    modalBg: 'bg-slate-900/95 border-white/10',
-    modalOverlay: 'bg-black/60',
+    modalBg: 'bg-slate-900 border-slate-800',
+    modalOverlay: 'bg-black/70',
     // Badge
-    badgeBg: 'bg-orange-500/20 border-orange-400/30',
-    badgeText: 'text-orange-300',
+    badgeBg: 'bg-amber-900/50 border-amber-800',
+    badgeText: 'text-amber-300',
     // Due count badge
-    dueBadge: 'bg-red-500/30 text-red-300',
+    dueBadge: 'bg-rose-900/50 text-rose-300',
+    // Grid/List view
+    gridCard: 'bg-slate-900 hover:bg-slate-800 border border-slate-800',
+    gridCardActive: 'bg-cyan-900/30 border-cyan-600',
   },
   light: {
     // Background
-    bg: 'bg-gradient-to-br from-slate-100 via-purple-100 to-slate-100',
+    bg: 'bg-slate-100',
     // Text colors
     text: 'text-slate-900',
     textMuted: 'text-slate-500',
-    textAccent: 'text-purple-700',
-    textSecondary: 'text-cyan-600',
-    textHighlight: 'text-amber-700',
+    textAccent: 'text-cyan-600',
+    textSecondary: 'text-slate-600',
+    textHighlight: 'text-amber-600',
     // Card styles
-    cardBg: 'bg-white/70 shadow-lg backdrop-blur-xl',
-    cardBgActive: 'bg-gradient-to-r from-purple-500 to-pink-500',
-    cardBgHover: 'hover:bg-white/90',
-    cardFrontBg: 'bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100',
-    cardBackBg: 'bg-gradient-to-br from-cyan-100 via-blue-100 to-indigo-100',
+    cardBg: 'bg-white border border-slate-200 shadow-sm',
+    cardBgActive: 'bg-cyan-500',
+    cardBgHover: 'hover:bg-slate-50',
+    cardFrontBg: 'bg-white',
+    cardBackBg: 'bg-slate-50',
     // Border
     border: 'border-slate-200',
-    borderActive: 'border-purple-400/50',
+    borderActive: 'border-cyan-500',
     // Buttons
-    buttonPrimary: 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30',
-    buttonSecondary: 'bg-white text-slate-700 hover:bg-slate-100 shadow-sm border border-slate-200',
-    buttonDanger: 'bg-red-100 text-red-700 border border-red-300 hover:bg-red-200',
-    buttonSuccess: 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200',
-    buttonGhost: 'bg-transparent hover:bg-slate-100 text-slate-600',
+    buttonPrimary: 'bg-cyan-500 hover:bg-cyan-600 text-white',
+    buttonSecondary: 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-300',
+    buttonDanger: 'bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100',
+    buttonSuccess: 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100',
+    buttonGhost: 'bg-transparent hover:bg-slate-100 text-slate-500',
     // Interactive elements
-    selectorBg: 'bg-slate-200/60',
-    selectorActive: 'bg-white text-purple-600 shadow-sm',
-    selectorInactive: 'text-slate-500 hover:text-slate-700',
+    selectorBg: 'bg-slate-200',
+    selectorActive: 'bg-cyan-500 text-white shadow-sm',
+    selectorInactive: 'text-slate-500 hover:text-slate-700 hover:bg-slate-100',
     // SRS grades
-    gradeEasy: 'bg-green-100 hover:bg-green-200 text-green-700 border border-green-300',
-    gradeGood: 'bg-yellow-100 hover:bg-yellow-200 text-yellow-700 border border-yellow-300',
-    gradeHard: 'bg-red-100 hover:bg-red-200 text-red-700 border border-red-300',
+    gradeEasy: 'bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-200',
+    gradeGood: 'bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200',
+    gradeHard: 'bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200',
     // Progress and stats
     progressBg: 'bg-slate-200',
-    statBg: 'bg-white/80 border-slate-200 shadow-sm',
+    progressFill: 'bg-cyan-500',
+    statBg: 'bg-white border-slate-200 shadow-sm',
     // Footer
     footerText: 'text-slate-500',
     footerMuted: 'text-slate-400',
     keyBg: 'bg-slate-200',
     // Modal
-    modalBg: 'bg-white border-slate-200 shadow-2xl',
+    modalBg: 'bg-white border-slate-200 shadow-xl',
     modalOverlay: 'bg-black/40',
     // Badge
-    badgeBg: 'bg-orange-100 border-orange-200',
-    badgeText: 'text-orange-600',
+    badgeBg: 'bg-amber-100 border-amber-200',
+    badgeText: 'text-amber-600',
     // Due count badge
-    dueBadge: 'bg-red-100 text-red-600',
+    dueBadge: 'bg-rose-100 text-rose-600',
+    // Grid/List view
+    gridCard: 'bg-white hover:bg-slate-50 border border-slate-200',
+    gridCardActive: 'bg-cyan-50 border-cyan-500',
   },
   sakura: {
     // Background
-    bg: 'bg-gradient-to-br from-pink-50 via-rose-100 to-pink-50',
+    bg: 'bg-rose-50',
     // Text colors
     text: 'text-rose-900',
     textMuted: 'text-rose-400',
     textAccent: 'text-rose-600',
-    textSecondary: 'text-pink-600',
-    textHighlight: 'text-amber-700',
+    textSecondary: 'text-rose-500',
+    textHighlight: 'text-amber-600',
     // Card styles
-    cardBg: 'bg-white/70 shadow-lg backdrop-blur-xl',
-    cardBgActive: 'bg-gradient-to-r from-rose-400 to-pink-500',
-    cardBgHover: 'hover:bg-white/90',
-    cardFrontBg: 'bg-gradient-to-br from-pink-200 via-rose-100 to-pink-200',
-    cardBackBg: 'bg-gradient-to-br from-rose-100 via-pink-100 to-rose-200',
+    cardBg: 'bg-white border border-rose-200 shadow-sm',
+    cardBgActive: 'bg-rose-500',
+    cardBgHover: 'hover:bg-rose-50',
+    cardFrontBg: 'bg-white',
+    cardBackBg: 'bg-rose-50',
     // Border
     border: 'border-rose-200',
-    borderActive: 'border-rose-400/50',
+    borderActive: 'border-rose-500',
     // Buttons
-    buttonPrimary: 'bg-gradient-to-r from-rose-400 to-pink-500 text-white shadow-lg shadow-rose-500/30',
-    buttonSecondary: 'bg-white text-rose-700 hover:bg-rose-50 shadow-sm border border-rose-200',
-    buttonDanger: 'bg-red-100 text-red-700 border border-red-300 hover:bg-red-200',
-    buttonSuccess: 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200',
-    buttonGhost: 'bg-transparent hover:bg-rose-50 text-rose-600',
+    buttonPrimary: 'bg-rose-500 hover:bg-rose-600 text-white',
+    buttonSecondary: 'bg-white text-rose-700 hover:bg-rose-50 border border-rose-200',
+    buttonDanger: 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100',
+    buttonSuccess: 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100',
+    buttonGhost: 'bg-transparent hover:bg-rose-100 text-rose-500',
     // Interactive elements
-    selectorBg: 'bg-rose-200/50',
-    selectorActive: 'bg-white text-rose-600 shadow-sm',
-    selectorInactive: 'text-rose-400 hover:text-rose-600',
+    selectorBg: 'bg-rose-100',
+    selectorActive: 'bg-rose-500 text-white shadow-sm',
+    selectorInactive: 'text-rose-400 hover:text-rose-600 hover:bg-rose-100',
     // SRS grades
-    gradeEasy: 'bg-green-100 hover:bg-green-200 text-green-700 border border-green-300',
-    gradeGood: 'bg-yellow-100 hover:bg-yellow-200 text-yellow-700 border border-yellow-300',
-    gradeHard: 'bg-red-100 hover:bg-red-200 text-red-700 border border-red-300',
+    gradeEasy: 'bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border border-emerald-200',
+    gradeGood: 'bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-200',
+    gradeHard: 'bg-rose-100 hover:bg-rose-200 text-rose-600 border border-rose-300',
     // Progress and stats
-    progressBg: 'bg-rose-200/50',
-    statBg: 'bg-white/80 border-rose-200 shadow-sm',
+    progressBg: 'bg-rose-200',
+    progressFill: 'bg-rose-500',
+    statBg: 'bg-white border-rose-200 shadow-sm',
     // Footer
     footerText: 'text-rose-400',
     footerMuted: 'text-rose-300',
     keyBg: 'bg-rose-100',
     // Modal
-    modalBg: 'bg-white border-rose-200 shadow-2xl',
+    modalBg: 'bg-white border-rose-200 shadow-xl',
     modalOverlay: 'bg-black/40',
     // Badge
-    badgeBg: 'bg-orange-100 border-orange-200',
-    badgeText: 'text-orange-600',
+    badgeBg: 'bg-amber-100 border-amber-200',
+    badgeText: 'text-amber-600',
     // Due count badge
-    dueBadge: 'bg-red-100 text-red-600',
+    dueBadge: 'bg-rose-200 text-rose-600',
+    // Grid/List view
+    gridCard: 'bg-white hover:bg-rose-50 border border-rose-200',
+    gridCardActive: 'bg-rose-100 border-rose-500',
   },
 } as const;
 

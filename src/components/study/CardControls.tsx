@@ -7,7 +7,6 @@ import {
   X,
 } from 'lucide-react';
 import { Button } from '@/components/common';
-import { cn } from '@/utils';
 
 interface CardControlsProps {
   onPrev: () => void;
@@ -27,21 +26,21 @@ export function CardControls({
   showQuizControls = true,
 }: CardControlsProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Navigation Buttons */}
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-3">
         <Button variant="secondary" onClick={onPrev}>
           <ChevronLeft className="w-5 h-5" />
-          နောက်သို့
+          Prev
         </Button>
 
         <Button variant="primary" onClick={onFlip}>
           <RotateCcw className="w-5 h-5" />
-          လှန်ရန်
+          Flip
         </Button>
 
         <Button variant="secondary" onClick={onNext}>
-          ရှေ့သို့
+          Next
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
@@ -49,19 +48,19 @@ export function CardControls({
       {/* Quiz Controls */}
       {showQuizControls && (
         <motion.div
-          className="flex justify-center gap-4"
+          className="flex justify-center gap-3"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.1 }}
         >
           <Button variant="danger" onClick={onUnknown}>
             <X className="w-5 h-5" />
-            မသိသေး
+            Don't Know
           </Button>
 
           <Button variant="success" onClick={onKnown}>
             <Check className="w-5 h-5" />
-            သိပြီ
+            Know
           </Button>
         </motion.div>
       )}

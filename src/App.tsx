@@ -22,10 +22,11 @@ import { CardControls, SRSControls, StudyModeSelector } from '@/components/study
 import { Header, Footer } from '@/components/layout';
 import { StatsModal } from '@/components/stats';
 
+// Flat background colors - no gradients for minimalist design
 const themeClasses = {
-  dark: 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900',
-  light: 'bg-gradient-to-br from-slate-100 via-purple-100 to-slate-100',
-  sakura: 'bg-gradient-to-br from-pink-50 via-rose-100 to-pink-50',
+  dark: 'bg-slate-950',
+  light: 'bg-slate-50',
+  sakura: 'bg-rose-50',
 };
 
 export default function App() {

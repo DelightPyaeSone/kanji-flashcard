@@ -13,7 +13,7 @@ export function DaySelector({
   selectedDay,
   onSelectDay,
 }: DaySelectorProps) {
-  const { config, isDark, isSakura } = useTheme();
+  const { config, isDark } = useTheme();
 
   return (
     <div className="flex flex-wrap gap-2 justify-center">
@@ -22,22 +22,17 @@ export function DaySelector({
           key={day}
           onClick={() => onSelectDay(day)}
           className={cn(
-            'px-3 py-1.5 rounded-lg text-sm transition-all duration-300',
+            'px-3 py-1.5 rounded-lg text-sm transition-all duration-200',
+            'border',
             selectedDay === day
-              ? cn(
-                  isSakura
-                    ? 'bg-rose-400/80 shadow-lg shadow-rose-400/30'
-                    : 'bg-cyan-500/80 shadow-lg shadow-cyan-500/30',
-                  'text-white'
+              ? cn(config.selectorActive, isDark ? 'border-cyan-500' : 'border-transparent')
+              : cn(
+                  config.selectorInactive,
+                  isDark ? 'border-slate-800' : 'border-slate-200'
                 )
-              : isDark
-                ? 'bg-white/5 hover:bg-white/15 text-white/70'
-                : isSakura
-                  ? 'bg-white/50 hover:bg-white/70 text-rose-600 shadow-sm'
-                  : 'bg-white/50 hover:bg-white/70 text-slate-600 shadow-sm'
           )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           {day}
         </motion.button>
