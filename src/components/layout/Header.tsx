@@ -3,6 +3,7 @@ import { Sun, Moon, Flower2, BarChart3 } from 'lucide-react';
 import type { Theme } from '@/types';
 import { cn } from '@/utils';
 import { themeConfig } from '@/hooks/useTheme';
+import { AuthButton } from '@/components/auth';
 
 interface HeaderProps {
   theme: Theme;
@@ -54,7 +55,7 @@ export function Header({
       </motion.p>
 
       {/* Compact Toolbar */}
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-2 flex-wrap">
         {/* Theme Selector - Minimal */}
         <div className={cn('flex items-center gap-0.5 rounded-lg p-0.5', config.selectorBg)}>
           {themes.map(({ theme: t, icon: Icon }) => (
@@ -101,6 +102,9 @@ export function Header({
             <BarChart3 className="w-4 h-4" />
           </button>
         )}
+
+        {/* Auth Button */}
+        <AuthButton />
       </div>
     </header>
   );

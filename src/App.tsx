@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { RotateCcw, Home } from 'lucide-react';
 
 import { useStore } from '@/store';
+import { initAuthListener, useAuthStore } from '@/store/authStore';
 import { getWeeks, getDays, getCards, getTopic, generateCardId } from '@/data';
 import {
   getVocabWeeks,
@@ -21,6 +22,7 @@ import { ProgressBar, Button } from '@/components/common';
 import { CardControls, SRSControls, StudyModeSelector } from '@/components/study';
 import { Header, Footer } from '@/components/layout';
 import { StatsModal } from '@/components/stats';
+import { LoginPage } from '@/components/auth';
 
 // Flat background colors - no gradients for minimalist design
 const themeClasses = {
@@ -32,6 +34,25 @@ const themeClasses = {
 export default function App() {
   const [showStats, setShowStats] = useState(false);
   const { config } = useTheme();
+  const { user, isInitialized, syncToCloud } = useAuthStore();
+
+  // Initialize Firebase auth listener
+  useEffect(() => {
+    const unsubscribe = initAuthListener();
+    return () => unsubscribe();
+  }, []);
+
+  // Auto-sync to cloud when user is logged in and data changes
+  useEffect(() => {
+    if (!user) return;
+
+    // Debounced sync - sync after 5 seconds of inactivity
+    const timer = setTimeout(() => {
+      syncToCloud();
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [user, syncToCloud]);
 
   const {
     appMode,
@@ -220,6 +241,23 @@ export default function App() {
 
   const completedDays = getCompletedDays();
   const completedWeeks = getCompletedWeeks();
+
+  // Show loading while checking auth state
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">📚</div>
+          <div className="text-slate-400">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login page if not authenticated
+  if (!user) {
+    return <LoginPage />;
+  }
 
   // Render Home Screen
   if (appMode === 'home') {

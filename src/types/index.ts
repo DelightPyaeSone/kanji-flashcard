@@ -121,3 +121,11 @@ export interface ViewedCards {
     [key: string]: string[];
   };
 }
+
+// ========== Auth Types ==========
+export interface AuthUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+}
