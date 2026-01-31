@@ -21,7 +21,7 @@ export function Footer() {
 
       {/* Minimal credits */}
       <p className={cn('text-xs', config.textMuted)}>
-        N2 日本語総まとめ • Data: Hla Hla Htay
+        Created by Pyae Sone for Lae Lae Wah❤️
       </p>
     </footer>
   );

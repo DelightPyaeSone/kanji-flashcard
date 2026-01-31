@@ -11,7 +11,14 @@
       "Bash(git checkout:*)",
       "Bash(git merge:*)",
       "Bash(git push:*)",
-      "WebFetch(domain:www.facebook.com)"
+      "WebFetch(domain:www.facebook.com)",
+      "WebFetch(domain:play.google.com)",
+      "WebFetch(domain:mindtwisted.com)",
+      "WebFetch(domain:jtalkonline.com)",
+      "Bash(npm run lint)",
+      "Bash(git pull:*)",
+      "Bash(gh pr create:*)",
+      "Bash(git fetch:*)"
     ]
   }
 }
