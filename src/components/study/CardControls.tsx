@@ -1,69 +1,64 @@
-import { motion } from 'framer-motion';
 import {
   ChevronLeft,
   ChevronRight,
   RotateCcw,
-  Check,
-  X,
 } from 'lucide-react';
-import { Button } from '@/components/common';
+import { cn } from '@/utils';
+import { useTheme } from '@/hooks';
 
 interface CardControlsProps {
   onPrev: () => void;
   onNext: () => void;
   onFlip: () => void;
-  onKnown: () => void;
-  onUnknown: () => void;
-  showQuizControls?: boolean;
 }
 
 export function CardControls({
   onPrev,
   onNext,
   onFlip,
-  onKnown,
-  onUnknown,
-  showQuizControls = true,
 }: CardControlsProps) {
+  const { config, isDark } = useTheme();
+
   return (
-    <div className="space-y-3">
-      {/* Navigation Buttons */}
-      <div className="flex justify-center gap-3">
-        <Button variant="secondary" onClick={onPrev}>
-          <ChevronLeft className="w-5 h-5" />
-          Prev
-        </Button>
+    <div className="flex justify-center items-center gap-4">
+      {/* Prev Button */}
+      <button
+        onClick={onPrev}
+        className={cn(
+          'w-12 h-12 rounded-full flex items-center justify-center',
+          'transition-colors',
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300',
+          config.text
+        )}
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
 
-        <Button variant="primary" onClick={onFlip}>
-          <RotateCcw className="w-5 h-5" />
-          Flip
-        </Button>
+      {/* Flip Button */}
+      <button
+        onClick={onFlip}
+        className={cn(
+          'w-16 h-16 rounded-full flex items-center justify-center',
+          'transition-colors',
+          isDark ? 'bg-cyan-600 hover:bg-cyan-500' : 'bg-slate-800 hover:bg-slate-700',
+          'text-white'
+        )}
+      >
+        <RotateCcw className="w-7 h-7" />
+      </button>
 
-        <Button variant="secondary" onClick={onNext}>
-          Next
-          <ChevronRight className="w-5 h-5" />
-        </Button>
-      </div>
-
-      {/* Quiz Controls */}
-      {showQuizControls && (
-        <motion.div
-          className="flex justify-center gap-3"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Button variant="danger" onClick={onUnknown}>
-            <X className="w-5 h-5" />
-            Don't Know
-          </Button>
-
-          <Button variant="success" onClick={onKnown}>
-            <Check className="w-5 h-5" />
-            Know
-          </Button>
-        </motion.div>
-      )}
+      {/* Next Button */}
+      <button
+        onClick={onNext}
+        className={cn(
+          'w-12 h-12 rounded-full flex items-center justify-center',
+          'transition-colors',
+          isDark ? 'bg-slate-800 hover:bg-slate-700' : 'bg-slate-200 hover:bg-slate-300',
+          config.text
+        )}
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
     </div>
   );
 }
