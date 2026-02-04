@@ -11,6 +11,7 @@ interface DayListProps {
   onBack: () => void;
   getDayProgress: (day: string) => number;
   getDayCardCount: (day: string) => number;
+  getQuizScore?: (day: string) => number;
   topic?: string;
 }
 
@@ -23,6 +24,7 @@ export function DayList({
   onBack,
   getDayProgress,
   getDayCardCount,
+  getQuizScore,
 }: DayListProps) {
   const { config, isDark } = useTheme();
 
@@ -50,6 +52,8 @@ export function DayList({
           const isCompleted = completedDays.includes(day);
           const progress = getDayProgress(day);
           const cardCount = getDayCardCount(day);
+          const quizScore = getQuizScore ? getQuizScore(day) : 0;
+          const isPassed = quizScore >= 90;
 
           return (
             <button
@@ -89,7 +93,19 @@ export function DayList({
                 <div className="text-left">
                   <div className={cn('font-medium', config.text)}>{day}</div>
                   <div className={cn('text-sm', config.textMuted)}>
-                    {cardCount} cards • {isCompleted ? 'Completed' : `${progress}%`}
+                    {cardCount} cards
+                    {isUnlocked && (
+                      <span>
+                        {' • '}
+                        {isPassed ? (
+                          <span className="text-emerald-500">Quiz: {quizScore}%</span>
+                        ) : quizScore > 0 ? (
+                          <span className="text-amber-500">Quiz: {quizScore}%</span>
+                        ) : (
+                          <span>Quiz: -</span>
+                        )}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

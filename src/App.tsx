@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
 
@@ -19,9 +19,10 @@ import { FlashCard } from '@/components/flashcard';
 import { BottomNav, WeekList, DayList } from '@/components/navigation';
 import { ProgressBar } from '@/components/common';
 import { CardControls } from '@/components/study';
-import { StatsModal } from '@/components/stats';
 import { LoginPage } from '@/components/auth';
 import { AuthButton } from '@/components/auth';
+import { QuizMode } from '@/components/quiz';
+import { BookmarkedCards } from '@/components/bookmarks';
 
 // Flat background colors
 const themeClasses = {
@@ -32,10 +33,12 @@ const themeClasses = {
 
 // View modes within kanji/vocab
 type StudyView = 'weeks' | 'days' | 'study';
+type StudyMode = 'flashcard' | 'quiz';
 
 export default function App() {
-  const [showStats, setShowStats] = useState(false);
   const [studyView, setStudyView] = useState<StudyView>('weeks');
+  const [studyMode, setStudyMode] = useState<StudyMode>('flashcard');
+  const [showBookmarks, setShowBookmarks] = useState(false);
   const { config, isDark } = useTheme();
   const { user, isInitialized, syncToCloud } = useAuthStore();
 
@@ -64,10 +67,11 @@ export default function App() {
     settings,
     knownCards,
     bookmarkedCards,
-    scores,
     streak,
     unlockedProgress,
     viewedCards,
+    quizScores,
+    saveQuizScore,
     setAppMode,
     setSelectedWeek,
     setSelectedDay,
@@ -150,10 +154,12 @@ export default function App() {
     setStudyView('study');
   };
 
-  const handleTabChange = (tab: 'home' | 'kanji' | 'vocab' | 'stats' | 'settings') => {
-    if (tab === 'stats') {
-      setShowStats(true);
-    } else if (tab === 'home' || tab === 'kanji' || tab === 'vocab') {
+  const handleTabChange = (tab: 'home' | 'kanji' | 'vocab' | 'bookmarks') => {
+    if (tab === 'bookmarks') {
+      setShowBookmarks(true);
+      setAppMode('home');
+    } else {
+      setShowBookmarks(false);
       setAppMode(tab);
       setStudyView('weeks');
     }
@@ -192,6 +198,11 @@ export default function App() {
     return currentWeeks.filter(week => getWeekProgress(week) >= 100);
   };
 
+  const getDayQuizScore = (day: string) => {
+    const key = `${currentSelectedWeek}-${day}`;
+    return quizScores[currentMode][key] || 0;
+  };
+
   // Loading state
   if (!isInitialized) {
     return (
@@ -210,7 +221,7 @@ export default function App() {
   }
 
   // Get active tab for bottom nav
-  const activeTab = appMode === 'home' ? 'home' : appMode;
+  const activeTab = showBookmarks ? 'bookmarks' : appMode === 'home' ? 'home' : appMode;
 
   return (
     <div
@@ -227,7 +238,7 @@ export default function App() {
       )}>
         <div className="flex items-center gap-2">
           {/* Back button for days/study view */}
-          {appMode !== 'home' && studyView !== 'weeks' && (
+          {!showBookmarks && appMode !== 'home' && studyView !== 'weeks' && (
             <button
               onClick={() => setStudyView(studyView === 'study' ? 'days' : 'weeks')}
               className={cn('p-2 rounded-lg', config.textMuted)}
@@ -236,7 +247,8 @@ export default function App() {
             </button>
           )}
           <h1 className={cn('text-lg font-bold', config.text)}>
-            {appMode === 'home' ? 'N2 Master' :
+            {showBookmarks ? 'Saved' :
+             appMode === 'home' ? 'N2 Master' :
              appMode === 'kanji' ? '漢字' : '単語'}
           </h1>
         </div>
@@ -255,8 +267,13 @@ export default function App() {
 
       {/* Main Content */}
       <main className="px-4 py-4 max-w-lg mx-auto">
+        {/* Bookmarks View */}
+        {showBookmarks && (
+          <BookmarkedCards />
+        )}
+
         {/* Home Screen */}
-        {appMode === 'home' && (
+        {!showBookmarks && appMode === 'home' && (
           <div className="space-y-4">
             <p className={cn('text-center mb-6', config.textMuted)}>
               JLPT N2 Study App
@@ -284,7 +301,7 @@ export default function App() {
         )}
 
         {/* Kanji/Vocab - Week List */}
-        {appMode !== 'home' && studyView === 'weeks' && (
+        {!showBookmarks && appMode !== 'home' && studyView === 'weeks' && (
           <WeekList
             weeks={currentWeeks}
             unlockedWeeks={unlockedWeeks}
@@ -295,7 +312,7 @@ export default function App() {
         )}
 
         {/* Kanji/Vocab - Day List */}
-        {appMode !== 'home' && studyView === 'days' && (
+        {!showBookmarks && appMode !== 'home' && studyView === 'days' && (
           <DayList
             week={currentSelectedWeek}
             days={currentDays}
@@ -305,11 +322,12 @@ export default function App() {
             onBack={() => setStudyView('weeks')}
             getDayProgress={getDayProgress}
             getDayCardCount={getDayCardCount}
+            getQuizScore={getDayQuizScore}
           />
         )}
 
         {/* Kanji/Vocab - Study View */}
-        {appMode !== 'home' && studyView === 'study' && (
+        {!showBookmarks && appMode !== 'home' && studyView === 'study' && (
           <div>
             {/* Topic */}
             {currentTopic && (
@@ -318,45 +336,91 @@ export default function App() {
               </div>
             )}
 
-            {/* Progress */}
-            <div className="mb-4">
-              <ProgressBar
-                current={currentCardIndex + 1}
-                total={cards.length}
-                correct={0}
-              />
+            {/* Mode Toggle */}
+            <div className="flex justify-center mb-4">
+              <div className={cn('inline-flex rounded-lg p-1', isDark ? 'bg-slate-800' : 'bg-slate-200')}>
+                <button
+                  onClick={() => setStudyMode('flashcard')}
+                  className={cn(
+                    'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+                    studyMode === 'flashcard'
+                      ? isDark ? 'bg-cyan-600 text-white' : 'bg-slate-800 text-white'
+                      : config.textMuted
+                  )}
+                >
+                  Flashcard
+                </button>
+                <button
+                  onClick={() => setStudyMode('quiz')}
+                  className={cn(
+                    'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+                    studyMode === 'quiz'
+                      ? isDark ? 'bg-cyan-600 text-white' : 'bg-slate-800 text-white'
+                      : config.textMuted
+                  )}
+                >
+                  Quiz
+                </button>
+              </div>
             </div>
 
-            {/* Flash Card */}
-            <AnimatePresence mode="wait">
-              {currentCard && (
-                <motion.div
-                  key={currentCardId}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.2 }}
-                  className="mb-6"
-                >
-                  <FlashCard
-                    card={currentCard}
-                    isFlipped={isFlipped}
-                    showReading={showReading}
-                    isBookmarked={isBookmarked}
-                    onFlip={toggleFlip}
-                    onToggleReading={toggleReading}
-                    onToggleBookmark={handleToggleBookmark}
+            {/* Flashcard Mode */}
+            {studyMode === 'flashcard' && (
+              <>
+                {/* Progress */}
+                <div className="mb-4">
+                  <ProgressBar
+                    current={currentCardIndex + 1}
+                    total={cards.length}
+                    correct={0}
                   />
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
 
-            {/* Controls */}
-            <CardControls
-              onPrev={handlePrev}
-              onNext={handleNext}
-              onFlip={toggleFlip}
-            />
+                {/* Flash Card */}
+                <AnimatePresence mode="wait">
+                  {currentCard && (
+                    <motion.div
+                      key={currentCardId}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      transition={{ duration: 0.2 }}
+                      className="mb-6"
+                    >
+                      <FlashCard
+                        card={currentCard}
+                        isFlipped={isFlipped}
+                        showReading={showReading}
+                        isBookmarked={isBookmarked}
+                        onFlip={toggleFlip}
+                        onToggleReading={toggleReading}
+                        onToggleBookmark={handleToggleBookmark}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Controls */}
+                <CardControls
+                  onPrev={handlePrev}
+                  onNext={handleNext}
+                  onFlip={toggleFlip}
+                />
+              </>
+            )}
+
+            {/* Quiz Mode */}
+            {studyMode === 'quiz' && (
+              <QuizMode
+                cards={cards}
+                mode={currentMode}
+                onBack={() => setStudyMode('flashcard')}
+                onComplete={(score, total) => {
+                  const percentage = Math.round((score / total) * 100);
+                  saveQuizScore(currentMode, currentSelectedWeek, currentSelectedDay, percentage);
+                }}
+              />
+            )}
           </div>
         )}
       </main>
@@ -365,16 +429,6 @@ export default function App() {
       <BottomNav
         activeTab={activeTab}
         onTabChange={handleTabChange}
-        onOpenStats={() => setShowStats(true)}
-      />
-
-      {/* Stats Modal */}
-      <StatsModal
-        isOpen={showStats}
-        onClose={() => setShowStats(false)}
-        streak={streak}
-        knownCardsCount={knownCards.length}
-        scores={scores}
       />
     </div>
   );

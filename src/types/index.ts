@@ -122,6 +122,15 @@ export interface ViewedCards {
   };
 }
 
+export interface QuizScore {
+  kanji: {
+    [key: string]: number; // key = "Week 1-Day 1", value = best percentage (0-100)
+  };
+  vocab: {
+    [key: string]: number;
+  };
+}
+
 // ========== Auth Types ==========
 export interface AuthUser {
   uid: string;

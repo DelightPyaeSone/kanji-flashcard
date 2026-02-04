@@ -1,14 +1,54 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Mail, Lock, Eye, EyeOff, Save } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/utils';
 
-export function LoginPage() {
-  const { login, isLoading, error, clearError } = useAuthStore();
+type AuthMode = 'login' | 'signup';
 
-  const handleLogin = async () => {
+// Saved credentials key
+const SAVED_EMAIL_KEY = 'n2-saved-email';
+
+export function LoginPage() {
+  const { login, loginWithEmail, signUp, isLoading, error, clearError } = useAuthStore();
+  const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [hasSavedEmail, setHasSavedEmail] = useState(false);
+
+  // Load saved email on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem(SAVED_EMAIL_KEY);
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+      setHasSavedEmail(true);
+    }
+  }, []);
+
+  const handleGoogleLogin = async () => {
     clearError();
     await login();
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+
+    if (!email || !password) return;
+
+    if (authMode === 'login') {
+      await loginWithEmail(email, password);
+    } else {
+      await signUp(email, password);
+    }
+  };
+
+  const toggleAuthMode = () => {
+    setAuthMode(prev => prev === 'login' ? 'signup' : 'login');
+    clearError();
   };
 
   return (
@@ -20,9 +60,9 @@ export function LoginPage() {
         transition={{ duration: 0.5 }}
       >
         {/* Logo & Title */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <motion.div
-            className="text-6xl mb-4"
+            className="text-5xl mb-3"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring' }}
@@ -30,7 +70,7 @@ export function LoginPage() {
             📚
           </motion.div>
           <motion.h1
-            className="text-4xl font-bold text-white mb-2"
+            className="text-3xl font-bold text-white mb-1"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -38,7 +78,7 @@ export function LoginPage() {
             N2 Master
           </motion.h1>
           <motion.p
-            className="text-slate-400"
+            className="text-slate-400 text-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -46,33 +86,6 @@ export function LoginPage() {
             JLPT N2 Kanji & Vocabulary Study App
           </motion.p>
         </div>
-
-        {/* Features */}
-        <motion.div
-          className="bg-slate-900 rounded-xl p-6 mb-6 border border-slate-800"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div className="p-3">
-              <div className="text-2xl mb-1">🎴</div>
-              <div className="text-sm text-slate-300">Flash Cards</div>
-            </div>
-            <div className="p-3">
-              <div className="text-2xl mb-1">📊</div>
-              <div className="text-sm text-slate-300">Progress Tracking</div>
-            </div>
-            <div className="p-3">
-              <div className="text-2xl mb-1">🔄</div>
-              <div className="text-sm text-slate-300">SRS System</div>
-            </div>
-            <div className="p-3">
-              <div className="text-2xl mb-1">☁️</div>
-              <div className="text-sm text-slate-300">Cloud Sync</div>
-            </div>
-          </div>
-        </motion.div>
 
         {/* Error Message */}
         {error && (
@@ -85,9 +98,115 @@ export function LoginPage() {
           </motion.div>
         )}
 
+        {/* Email/Password Form */}
+        <motion.form
+          onSubmit={handleEmailSubmit}
+          className="bg-slate-900 rounded-xl p-5 mb-4 border border-slate-800"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <h2 className="text-white font-medium mb-4 text-center">
+            {authMode === 'login' ? 'Login' : 'Create Account'}
+          </h2>
+
+          {/* Email Input */}
+          <div className="mb-3">
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={cn(
+                  'w-full py-3 pl-10 pr-4 rounded-lg',
+                  'bg-slate-800 border border-slate-700',
+                  'text-white placeholder-slate-500',
+                  'focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500',
+                  'transition-colors'
+                )}
+                required
+              />
+            </div>
+          </div>
+
+          {/* Password Input */}
+          <div className="mb-4">
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={cn(
+                  'w-full py-3 pl-10 pr-12 rounded-lg',
+                  'bg-slate-800 border border-slate-700',
+                  'text-white placeholder-slate-500',
+                  'focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500',
+                  'transition-colors'
+                )}
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+            {authMode === 'signup' && (
+              <p className="text-slate-500 text-xs mt-1 ml-1">
+                Password must be at least 6 characters
+              </p>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isLoading || !email || !password}
+            className={cn(
+              'w-full py-3 rounded-lg font-medium transition-all',
+              'flex items-center justify-center gap-2',
+              'bg-cyan-600 hover:bg-cyan-500 text-white',
+              'disabled:opacity-50 disabled:cursor-not-allowed'
+            )}
+          >
+            {isLoading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              authMode === 'login' ? 'Login' : 'Sign Up'
+            )}
+          </button>
+
+          {/* Toggle Auth Mode */}
+          <div className="text-center mt-4">
+            <button
+              type="button"
+              onClick={toggleAuthMode}
+              className="text-cyan-400 text-sm hover:underline"
+            >
+              {authMode === 'login'
+                ? "Don't have an account? Sign up"
+                : 'Already have an account? Login'}
+            </button>
+          </div>
+        </motion.form>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1 h-px bg-slate-700" />
+          <span className="text-slate-500 text-sm">or</span>
+          <div className="flex-1 h-px bg-slate-700" />
+        </div>
+
         {/* Google Sign In Button */}
         <motion.button
-          onClick={handleLogin}
+          onClick={handleGoogleLogin}
           disabled={isLoading}
           className={cn(
             'w-full py-3 px-4 rounded-xl font-medium transition-all',

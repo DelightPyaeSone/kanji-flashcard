@@ -50,6 +50,16 @@ export function generateVocabCardId(week: string, day: string, index: number): s
   return `vocab-${week}-${day}-${index}`;
 }
 
+export function getVocabCardById(cardId: string): { card: KanjiCard; week: string; day: string } | null {
+  if (!cardId.startsWith('vocab-')) return null;
+  const match = cardId.match(/^vocab-(Week \d+)-(Day \d+)-(\d+)$/);
+  if (!match) return null;
+  const [, week, day, indexStr] = match;
+  const card = vocabData[week]?.[day]?.cards?.[parseInt(indexStr)];
+  if (!card) return null;
+  return { card, week, day };
+}
+
 export function getTotalVocabCards(): number {
   let total = 0;
   for (const week of Object.values(vocabData)) {

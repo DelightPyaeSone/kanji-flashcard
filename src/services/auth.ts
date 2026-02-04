@@ -1,5 +1,7 @@
 import {
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   User,
@@ -13,6 +15,28 @@ export const signInWithGoogle = async (): Promise<User | null> => {
     return result.user;
   } catch (error) {
     console.error('Error signing in with Google:', error);
+    throw error;
+  }
+};
+
+// Sign in with Email/Password
+export const signInWithEmail = async (email: string, password: string): Promise<User | null> => {
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    return result.user;
+  } catch (error) {
+    console.error('Error signing in with email:', error);
+    throw error;
+  }
+};
+
+// Sign up with Email/Password
+export const signUpWithEmail = async (email: string, password: string): Promise<User | null> => {
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    return result.user;
+  } catch (error) {
+    console.error('Error signing up with email:', error);
     throw error;
   }
 };

@@ -11,6 +11,7 @@ import type {
   AppMode,
   UnlockProgress,
   ViewedCards,
+  QuizScore,
 } from '@/types';
 import { createInitialSRSData, calculateNextReview, getDueCards } from '@/services/srs';
 import { generateCardId } from '@/data';
@@ -59,6 +60,7 @@ interface StudyState {
   // Unlock System
   unlockedProgress: UnlockProgress;
   viewedCards: ViewedCards;
+  quizScores: QuizScore;
 
   // Actions - App Mode
   setAppMode: (mode: AppMode) => void;
@@ -116,6 +118,11 @@ interface StudyState {
   isWeekUnlocked: (mode: 'kanji' | 'vocab', week: string) => boolean;
   getDayProgress: (mode: 'kanji' | 'vocab', week: string, day: string, totalCards: number) => number;
   resetUnlockProgress: () => void;
+
+  // Actions - Quiz Unlock System
+  saveQuizScore: (mode: 'kanji' | 'vocab', week: string, day: string, percentage: number) => void;
+  getQuizScore: (mode: 'kanji' | 'vocab', week: string, day: string) => number;
+  isDayPassedQuiz: (mode: 'kanji' | 'vocab', week: string, day: string) => boolean;
 }
 
 const getToday = () => new Date().toISOString().split('T')[0];
@@ -178,6 +185,10 @@ export const useStore = create<StudyState>()(
         vocab: { 'Week 1': ['Day 1'] },
       },
       viewedCards: {
+        kanji: {},
+        vocab: {},
+      },
+      quizScores: {
         kanji: {},
         vocab: {},
       },
@@ -467,7 +478,7 @@ export const useStore = create<StudyState>()(
         })),
 
       // Actions - Unlock System
-      markCardViewed: (mode, week, day, cardIndex, totalCards) =>
+      markCardViewed: (mode, week, day, cardIndex, _totalCards) =>
         set((state) => {
           const key = `${week}-${day}`;
           const currentViewed = state.viewedCards[mode][key] || [];
@@ -485,9 +496,67 @@ export const useStore = create<StudyState>()(
             },
           };
 
-          // Check if all cards viewed - unlock next day
+          // Note: Unlock is now handled by quiz score (90%+), not by viewing all cards
+          return {
+            viewedCards: newViewedCards,
+          };
+        }),
+
+      isDayUnlocked: (mode, week, day) => {
+        const state = get();
+        const weekUnlocked = state.unlockedProgress[mode][week] || [];
+        return weekUnlocked.includes(day);
+      },
+
+      isWeekUnlocked: (mode, week) => {
+        const state = get();
+        const weekUnlocked = state.unlockedProgress[mode][week];
+        return weekUnlocked !== undefined && weekUnlocked.length > 0;
+      },
+
+      getDayProgress: (mode, week, day, totalCards) => {
+        const state = get();
+        const key = `${week}-${day}`;
+        const viewed = state.viewedCards[mode][key] || [];
+        return totalCards > 0 ? Math.round((viewed.length / totalCards) * 100) : 0;
+      },
+
+      resetUnlockProgress: () =>
+        set({
+          unlockedProgress: {
+            kanji: { 'Week 1': ['Day 1'] },
+            vocab: { 'Week 1': ['Day 1'] },
+          },
+          viewedCards: {
+            kanji: {},
+            vocab: {},
+          },
+          quizScores: {
+            kanji: {},
+            vocab: {},
+          },
+        }),
+
+      // Actions - Quiz Unlock System
+      saveQuizScore: (mode, week, day, percentage) =>
+        set((state) => {
+          const key = `${week}-${day}`;
+          const currentBest = state.quizScores[mode][key] || 0;
+
+          // Only save if it's a new best score
+          if (percentage <= currentBest) return state;
+
+          const newQuizScores = {
+            ...state.quizScores,
+            [mode]: {
+              ...state.quizScores[mode],
+              [key]: percentage,
+            },
+          };
+
+          // If score >= 90%, unlock next day
           let newUnlockedProgress = state.unlockedProgress;
-          if (newViewed.length >= totalCards) {
+          if (percentage >= 90) {
             const dayNum = parseInt(day.replace('Day ', ''));
             const weekNum = parseInt(week.replace('Week ', ''));
             const nextDay = `Day ${dayNum + 1}`;
@@ -522,41 +591,22 @@ export const useStore = create<StudyState>()(
           }
 
           return {
-            viewedCards: newViewedCards,
+            quizScores: newQuizScores,
             unlockedProgress: newUnlockedProgress,
           };
         }),
 
-      isDayUnlocked: (mode, week, day) => {
-        const state = get();
-        const weekUnlocked = state.unlockedProgress[mode][week] || [];
-        return weekUnlocked.includes(day);
-      },
-
-      isWeekUnlocked: (mode, week) => {
-        const state = get();
-        const weekUnlocked = state.unlockedProgress[mode][week];
-        return weekUnlocked !== undefined && weekUnlocked.length > 0;
-      },
-
-      getDayProgress: (mode, week, day, totalCards) => {
+      getQuizScore: (mode, week, day) => {
         const state = get();
         const key = `${week}-${day}`;
-        const viewed = state.viewedCards[mode][key] || [];
-        return totalCards > 0 ? Math.round((viewed.length / totalCards) * 100) : 0;
+        return state.quizScores[mode][key] || 0;
       },
 
-      resetUnlockProgress: () =>
-        set({
-          unlockedProgress: {
-            kanji: { 'Week 1': ['Day 1'] },
-            vocab: { 'Week 1': ['Day 1'] },
-          },
-          viewedCards: {
-            kanji: {},
-            vocab: {},
-          },
-        }),
+      isDayPassedQuiz: (mode, week, day) => {
+        const state = get();
+        const key = `${week}-${day}`;
+        return (state.quizScores[mode][key] || 0) >= 90;
+      },
     }),
     {
       name: 'n2-master-storage',
@@ -578,6 +628,7 @@ export const useStore = create<StudyState>()(
         // Unlock system
         unlockedProgress: state.unlockedProgress,
         viewedCards: state.viewedCards,
+        quizScores: state.quizScores,
       }),
     }
   )

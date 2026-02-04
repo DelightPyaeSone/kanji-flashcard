@@ -1,4 +1,4 @@
-import type { KanjiData } from '@/types';
+import type { KanjiData, KanjiCard } from '@/types';
 import { week1 } from './week1';
 import { week2 } from './week2';
 import { week3 } from './week3';
@@ -47,6 +47,15 @@ export const getCardById = (cardId: string) => {
   const dayKey = `Day ${day}`;
   const cards = kanjiData[weekKey]?.[dayKey]?.cards;
   return cards?.[parseInt(index)];
+};
+
+export const getKanjiCardWithInfo = (cardId: string): { card: KanjiCard; week: string; day: string } | null => {
+  const [week, day, index] = cardId.split('-');
+  const weekKey = `Week ${week}`;
+  const dayKey = `Day ${day}`;
+  const card = kanjiData[weekKey]?.[dayKey]?.cards?.[parseInt(index)];
+  if (!card) return null;
+  return { card, week: weekKey, day: dayKey };
 };
 
 export const generateCardId = (week: string, day: string, index: number): string => {

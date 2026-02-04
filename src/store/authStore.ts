@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { User } from 'firebase/auth';
-import { signInWithGoogle, signOut, onAuthChange } from '@/services/auth';
+import { signInWithGoogle, signInWithEmail, signUpWithEmail, signOut, onAuthChange } from '@/services/auth';
 import { loadUserProgress, saveUserProgress, initializeNewUser } from '@/services/firestore';
 import { useStore } from './index';
 import type { AuthUser } from '@/types';
@@ -14,6 +14,8 @@ interface AuthState {
 
   // Actions
   login: () => Promise<void>;
+  loginWithEmail: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   syncToCloud: () => Promise<void>;
   loadFromCloud: () => Promise<void>;
@@ -55,6 +57,64 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
     } catch (error) {
       set({ error: (error as Error).message });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  loginWithEmail: async (email: string, password: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const firebaseUser = await signInWithEmail(email, password);
+      if (firebaseUser) {
+        const authUser = toAuthUser(firebaseUser);
+        set({ user: authUser });
+
+        // Load progress from cloud
+        await get().loadFromCloud();
+      }
+    } catch (error: unknown) {
+      const firebaseError = error as { code?: string; message?: string };
+      // Convert Firebase error codes to user-friendly messages
+      let errorMessage = firebaseError.message || 'Login failed';
+      if (firebaseError.code === 'auth/user-not-found') {
+        errorMessage = 'Email not found. Please sign up first.';
+      } else if (firebaseError.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password. Please try again.';
+      } else if (firebaseError.code === 'auth/invalid-credential') {
+        errorMessage = 'Invalid email or password.';
+      }
+      set({ error: errorMessage });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  signUp: async (email: string, password: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const firebaseUser = await signUpWithEmail(email, password);
+      if (firebaseUser) {
+        const authUser = toAuthUser(firebaseUser);
+        set({ user: authUser });
+
+        // Initialize new user in Firestore
+        await initializeNewUser(
+          firebaseUser.uid,
+          firebaseUser.displayName || email.split('@')[0],
+          firebaseUser.email
+        );
+      }
+    } catch (error: unknown) {
+      const firebaseError = error as { code?: string; message?: string };
+      // Convert Firebase error codes to user-friendly messages
+      let errorMessage = firebaseError.message || 'Sign up failed';
+      if (firebaseError.code === 'auth/email-already-in-use') {
+        errorMessage = 'Email already exists. Please login instead.';
+      } else if (firebaseError.code === 'auth/weak-password') {
+        errorMessage = 'Password is too weak. Use at least 6 characters.';
+      }
+      set({ error: errorMessage });
     } finally {
       set({ isLoading: false });
     }

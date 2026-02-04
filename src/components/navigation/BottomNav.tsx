@@ -1,33 +1,23 @@
-import { BookOpen, MessageSquareText, BarChart3, Settings, Home } from 'lucide-react';
-import type { AppMode } from '@/types';
+import { BookOpen, MessageSquareText, Bookmark, Home } from 'lucide-react';
 import { cn } from '@/utils';
 import { useTheme } from '@/hooks';
 
-type NavTab = 'home' | 'kanji' | 'vocab' | 'stats' | 'settings';
+type NavTab = 'home' | 'kanji' | 'vocab' | 'bookmarks';
 
 interface BottomNavProps {
   activeTab: NavTab;
   onTabChange: (tab: NavTab) => void;
-  onOpenStats: () => void;
 }
 
 const tabs: { id: NavTab; label: string; icon: typeof Home }[] = [
   { id: 'home', label: 'Home', icon: Home },
   { id: 'kanji', label: '漢字', icon: BookOpen },
   { id: 'vocab', label: '単語', icon: MessageSquareText },
-  { id: 'stats', label: 'Stats', icon: BarChart3 },
+  { id: 'bookmarks', label: 'Saved', icon: Bookmark },
 ];
 
-export function BottomNav({ activeTab, onTabChange, onOpenStats }: BottomNavProps) {
+export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const { config, isDark } = useTheme();
-
-  const handleTabClick = (tab: NavTab) => {
-    if (tab === 'stats') {
-      onOpenStats();
-    } else {
-      onTabChange(tab);
-    }
-  };
 
   return (
     <nav
@@ -39,11 +29,11 @@ export function BottomNav({ activeTab, onTabChange, onOpenStats }: BottomNavProp
     >
       <div className="max-w-lg mx-auto flex justify-around items-center h-16">
         {tabs.map(({ id, label, icon: Icon }) => {
-          const isActive = activeTab === id || (id === 'stats' && false);
+          const isActive = activeTab === id;
           return (
             <button
               key={id}
-              onClick={() => handleTabClick(id)}
+              onClick={() => onTabChange(id)}
               className={cn(
                 'flex flex-col items-center justify-center w-full h-full',
                 'transition-colors',
